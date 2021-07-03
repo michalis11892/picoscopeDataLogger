@@ -3,6 +3,7 @@ import numpy as np
 from picosdk.ps2000a import ps2000a as ps
 from picosdk.functions import adc2mV, assert_pico_ok
 
+#-----------------------------------------[Functions]-----------------------------------------
 def data_block(chandle, status, channel, coupling, range, offset,
                 trig_channel, trig_adc_counts, trig_direction, trig_delay, trig_auto, preTriggerSamples, postTriggerSamples,
                 timebase, downsampling_ratio_mode, downsampling_ratio):
@@ -110,8 +111,11 @@ def data_block(chandle, status, channel, coupling, range, offset,
 
     return results
 
+#-----------------------------------------[Main Code]-----------------------------------------
 chandle = ctypes.c_int16()
 status = {}
+
+
 
 status["openunit"] = ps.ps2000aOpenUnit(ctypes.byref(chandle), None)
 assert_pico_ok(status["openunit"])
