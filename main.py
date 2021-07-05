@@ -82,7 +82,7 @@ def data_block(chandle, status, channel, coupling, range, offset,
     if trig_channel == 'A':
         status["trigger"] = ps.ps2000aSetSimpleTrigger(chandle, 1, 0, trig_adc_counts, trig_direction, trig_delay, trig_auto)
         assert_pico_ok(status["trigger"])
-    else if trig_channel == 'B':
+    elif trig_channel == 'B':
         status["trigger"] = ps.ps2000aSetSimpleTrigger(chandle, 1, 1, trig_adc_counts, trig_direction, trig_delay, trig_auto)
         assert_pico_ok(status["trigger"])
     else:
@@ -166,11 +166,11 @@ def data_block(chandle, status, channel, coupling, range, offset,
 
     # convert ADC counts data to mV
     if 'A' in channel:
-        adc2mVChAMax =  adc2mV(bufferAMax, chARange, maxADC)
+        adc2mVChAMax =  adc2mV(bufferAMax, range[0], maxADC)
         results[0] = [time, adc2mVChAMax]
     if 'B' in channel:
-        adc2mVChBMax =  adc2mV(bufferBMax, chBRange, maxADC)
-        results[0] = [time, adc2mVChBMax]
+        adc2mVChBMax =  adc2mV(bufferBMax, range[1], maxADC)
+        results[1] = [time, adc2mVChBMax]
 
     return results
 
@@ -178,10 +178,17 @@ def data_block(chandle, status, channel, coupling, range, offset,
 chandle = ctypes.c_int16()
 status = {}
 
-print(data_block(chandle, status, 'A', ))
-
+# Open the scope
 status["openunit"] = ps.ps2000aOpenUnit(ctypes.byref(chandle), None)
 assert_pico_ok(status["openunit"])
+
+#TEST
+f = open('test.txt', 'w')
+for axis in data_block(chandle, status, 'A', [0,0], [6,0], [0,0], 'A', 1024, 2, 0, 1000, 2500, 2500, 8, 0, 1)[0]:
+    f.write('--------------------------------------------------------------------\n')
+    for element in axis:
+        f.write(str(element)+'\n')
+f.close()
 
 # Stop the scope
 status["stop"] = ps.ps2000aStop(chandle)
