@@ -7,6 +7,69 @@ from picosdk.functions import adc2mV, assert_pico_ok
 def data_block(chandle, status, channel, coupling, range, offset,
                 trig_channel, trig_adc_counts, trig_direction, trig_delay, trig_auto, preTriggerSamples, postTriggerSamples,
                 timebase, downsampling_ratio_mode, downsampling_ratio):
+    '''
+    chandle -> Picoscope handle
+    status, coupling, range, offset -> Lists,
+        list[0] -> A channel
+        list[1] -> B channel
+    channel, trig_channel, trig_adc_counts, trig_direction, trig_delay, trig_auto, preTriggerSamples, postTriggerSamples, timebase, downsampling_ratio_mode, downsampling_ratio -> Variables
+
+    channel:
+        'AB' OR 'A' OR 'B' (Any valid permutation of the used channels)
+    status:
+        Empty list
+    coupling:
+        AC -> 0
+        DC -> 1
+    range:
+        10 mV -> 0
+        20 mV -> 1
+        50 mV -> 2
+        100 mV -> 3
+        200 mV -> 4
+        500 mV -> 5
+        1 V -> 6
+        2 V -> 7
+        5 V -> 8
+        10 V -> 9
+        20 V -> 10
+        50 V -> 11
+        MAX RANGE  -> 12
+    offset:
+        Any offset, same units as range
+    trig_channel:
+        'A' OR 'B' (Single channel trigger only)
+    trig_adc_counts:
+        -32512 <= trig_adc_counts <= +32512 (trigger threshold),
+            -32512  -> corresponds to the Minimum Range Voltage
+            0 -> corresponds to 0 Volts
+            +32512 -> corresponds to the Maximum Range Voltage
+    trig_direction:
+        Above -> 0
+        Below -> 1
+        Rising -> 2
+        Falling -> 3
+        Rising Or Falling -> 4
+    trig_delay:
+        Arbitrary trigger delay in ms
+    trig_auto:
+        Arbitrary number of milliseconds the device will wait if no trigger occurs in ms
+    preTriggerSamples:
+        Arbitrary number of samples to keep before trigger fire point
+    postTriggerSamples:
+        Arbitrary number of samples to keep after trigger fire point
+    timebase:
+        Let MSR be the Maximum Smapling Rate of the device and n be the timebase value,
+        Timebase 0 to 2 correspond to a sample interval value of 2^n /MSR,
+        Timebase 3 to 2^32 correspond to a sample interval value of (n-2)*8 /MSR
+    downsampling_ratio_mode:
+        None -> 0 (No downsampling)
+        Aggregate -> 1 (Keep only block Max and Min)
+        Average -> 2 (Keep block Average)
+        Decimate -> 3 (Keep only first measured block value)
+    downsampling_ratio:
+        Samples per data block for downsampling
+    '''
     #Set channels
     if 'A' in channel:
         status["setChA"] = ps.ps2000aSetChannel(chandle, 0, 1, coupling[0], range[0], offset[0])
@@ -23,14 +86,14 @@ def data_block(chandle, status, channel, coupling, range, offset,
         status["trigger"] = ps.ps2000aSetSimpleTrigger(chandle, 1, 1, trig_adc_counts, trig_direction, trig_delay, trig_auto)
         assert_pico_ok(status["trigger"])
     else:
-        return 'Error'
+        return 'Invalid Trigger Channel'
 
     totalSamples = preTriggerSamples + postTriggerSamples
 
     # Get timebase information
     timeIntervalns = ctypes.c_float()
     returnedMaxSamples = ctypes.c_int32()
-    oversample = ctypes.c_int16(0)
+    oversample = ctypes.c_int16(0) #Not Used - Residual function from older scopes
     status["getTimebase2"] = ps.ps2000aGetTimebase2(chandle,
                                                     timebase,
                                                     totalSamples,
@@ -115,7 +178,7 @@ def data_block(chandle, status, channel, coupling, range, offset,
 chandle = ctypes.c_int16()
 status = {}
 
-
+print(data_block(chandle, status, 'A', ))
 
 status["openunit"] = ps.ps2000aOpenUnit(ctypes.byref(chandle), None)
 assert_pico_ok(status["openunit"])
