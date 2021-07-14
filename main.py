@@ -183,7 +183,7 @@ def data_block(chandle, status, channel, coupling, crange, offset,
 
 def data_rapid_block(chandle, status, channel, coupling, crange, offset,
                 complxTrig, trig_conditions, trig_adc_counts, trig_direction, trig_delay, trig_auto, preTriggerSamples, postTriggerSamples,
-                timebase, segments, captures, downsampling_ratio_mode, downsampling_ratio): #Measured deadtime between calls ~30 ms (in data)
+                timebase, segments, captures, downsampling_ratio_mode, downsampling_ratio): #Measured deadtime between calls ~~3/160000 seconds/totalSamples (in data)
     '''
     chandle -> Picoscope handle
     All other parameters are single-valued variables
@@ -632,10 +632,10 @@ for axis in data_block(chandle, status, 'A', [0,0], [6,0], [0,0], 'A', 1024, 2, 
         f.write(str(element)+'\n')
 f.close()'''
 
-'''#TEST data_rapid_block() #Measured deadtime between calls ~30 ms (in data)
+#TEST data_rapid_block() #Measured deadtime between calls ~3/160000 seconds/totalSamples (in data)
 buff = []
 for i in range(10):
-    buff.append(data_rapid_block(chandle, status, 'A', 0, 6, 0, False, [], 1024, 2, 0, 800, 800, 1000, 32, 6, 6, 0, 1))
+    buff.append(data_rapid_block(chandle, status, 'A', 0, 6, 0, False, [], 1024, 2, 0, 1000, 1600, 1600, 32, 6, 6, 0, 1))
     #restart_scope()
 f = open('test.txt', 'w')
 for run in buff:
@@ -653,7 +653,7 @@ for run in buff:
                 f.write('--------------------------------------------------------------------=[Axis]=--------------------------------------------------------------------\n')
                 for element in axis:
                     f.write(str(element)+'\n')
-f.close()'''
+f.close()
 
 
 '''#TEST data_streaming()
