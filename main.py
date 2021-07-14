@@ -1,5 +1,6 @@
 import ctypes
 import numpy as np
+from matplotlib import pyplot as plt
 from picosdk.ps2000a import ps2000a as ps
 from picosdk.functions import adc2mV, assert_pico_ok
 import time
@@ -181,8 +182,8 @@ def data_block(chandle, status, channel, coupling, crange, offset,
     return results
 
 def data_rapid_block(chandle, status, channel, coupling, crange, offset,
-                simpleTrig, trig_conditions, trig_adc_counts, trig_direction, trig_delay, trig_auto, preTriggerSamples, postTriggerSamples,
-                timebase, segments, captures, downsampling_ratio_mode, downsampling_ratio):
+                complxTrig, trig_conditions, trig_adc_counts, trig_direction, trig_delay, trig_auto, preTriggerSamples, postTriggerSamples,
+                timebase, segments, captures, downsampling_ratio_mode, downsampling_ratio): #Measured deadtime between calls ~30 ms (in data)
     '''
     chandle -> Picoscope handle
     All other parameters are single-valued variables
@@ -210,9 +211,9 @@ def data_rapid_block(chandle, status, channel, coupling, crange, offset,
         MAX RANGE  -> 12
     offset:
         Any offset, same units as range
-    simpleTrig:
-        No conditions -> True
-        Logical conditions (AND, OR, etc...) -> False
+    complxTrig:
+        No conditions -> False
+        Logical conditions (AND, OR, etc...) -> True
     trig_conditions:
         List of lists, [list1, list2, list3, ...]
         where each list represents the parameters of a condition structure
@@ -270,7 +271,7 @@ def data_rapid_block(chandle, status, channel, coupling, crange, offset,
         assert_pico_ok(status["trigger"])
 
     #Check for logical triggering conditions
-    if not simpleTrig:
+    if complxTrig:
         cond_list = []
         try:
             for condition in trig_conditions:
@@ -591,7 +592,7 @@ def sigGen_stndrd(chandle, status, offsetVoltage, pkToPk, waveType,  startFreque
     status["SetSigGenBuiltIn"] = ps.ps2000aSetSigGenBuiltIn(chandle, offsetVoltage, pkToPk, waveType, startFrequency, stopFrequency, increment, dwellTime, sweepType, operation, shots, sweeps, triggertype, triggerSource, extInThreshold)
     assert_pico_ok(status["SetSigGenBuiltIn"])
 
-def restart_scope(chandle, status):
+def restart_scope():
     global chandle, status
     # Stop the scope
     status["stop"] = ps.ps2000aStop(chandle)
@@ -619,6 +620,10 @@ status = {}
 status["openunit"] = ps.ps2000aOpenUnit(ctypes.byref(chandle), None)
 assert_pico_ok(status["openunit"])
 
+#TEST sigGen_stndrd()
+sigGen_stndrd(chandle, status, 0, 1000000, 0, 100, 10000, 100, 0.1, 0, 0, 0, 0, 0, 0, 1)
+#time.sleep(60)
+
 '''#TEST data_block()
 f = open('test.txt', 'w')
 for axis in data_block(chandle, status, 'A', [0,0], [6,0], [0,0], 'A', 1024, 2, 0, 1000, 2500, 2500, 8, 0, 1)[0]:
@@ -627,15 +632,29 @@ for axis in data_block(chandle, status, 'A', [0,0], [6,0], [0,0], 'A', 1024, 2, 
         f.write(str(element)+'\n')
 f.close()'''
 
-#TEST data_rapid_block()
+'''#TEST data_rapid_block() #Measured deadtime between calls ~30 ms (in data)
+buff = []
+for i in range(10):
+    buff.append(data_rapid_block(chandle, status, 'A', 0, 6, 0, False, [], 1024, 2, 0, 800, 800, 1000, 32, 6, 6, 0, 1))
+    #restart_scope()
 f = open('test.txt', 'w')
-for list in data_rapid_block(chandle, status, 'A', 0, 6, 0, False, [], 1024, 2, 0, 1000, 800, 800, 32, 10, 10, 0, 1):
-    f.write('--------------------------------------------------------------------=[List]=--------------------------------------------------------------------\n')
-    for axis in list:
-        f.write('--------------------------------------------------------------------=[Axis]=--------------------------------------------------------------------\n')
-        for element in axis:
-            f.write(str(element)+'\n')
-f.close()
+for run in buff:
+    print('NEW RUN')
+    if True: #True for plots
+        for list in run:
+            plt.plot(list[0], list[1])
+        plt.xlabel('Time (ns)')
+        plt.ylabel('Voltage (mV)')
+        plt.show()
+    elif False: #True for file writing
+        for list in run:
+            f.write('--------------------------------------------------------------------=[List]=--------------------------------------------------------------------\n')
+            for axis in list:
+                f.write('--------------------------------------------------------------------=[Axis]=--------------------------------------------------------------------\n')
+                for element in axis:
+                    f.write(str(element)+'\n')
+f.close()'''
+
 
 '''#TEST data_streaming()
 nextSample = 0 #global variable
