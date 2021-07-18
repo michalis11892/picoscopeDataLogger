@@ -1,2 +1,3 @@
+*.note
 *.out
 __pycache__
