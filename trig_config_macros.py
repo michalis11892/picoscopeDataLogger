@@ -11,7 +11,7 @@ def trig_pwq_config(chandle, status, trig_pwq_conditions, trig_direction, trig_l
         condition = list(map(ctypes.c_int32, condition)) #Convert arguments to ctypes.c_int32
         pwq_list.append(PS2000A_PWQ_CONDITIONS(condition[0], condition[1], condition[2], condition[3], condition[4], condition[5]))
     #Set pulse width qualifier conditions
-    ps.ps2000aSetPulseWidthQualifier(chandle, id(pwq_list), len(pwq_list), trig_direction, trig_lower, trig_upper, trig_type)
+    status["setPulseWidthQualifier"] = ps.ps2000aSetPulseWidthQualifier(chandle, id(pwq_list), len(pwq_list), trig_direction, trig_lower, trig_upper, trig_type)
 
 def trig_logic_config(chandle, status, trig_conditions, trig_directions, trig_properties, trig_auto):
     cond_list = []
