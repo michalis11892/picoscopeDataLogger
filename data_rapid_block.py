@@ -2,10 +2,11 @@ import ctypes
 import numpy as np
 from picosdk.ps2000a import ps2000a as ps
 from picosdk.functions import adc2mV, assert_pico_ok
-from trig_logic_config import trig_logic_config
+from trig_config_macros import trig_logic_config
+from trig_config_macros import trig_pwq_config
 
 def data_rapid_block(chandle, status, channel, coupling, crange, offset,
-                complxTrig, trig_conditions, trig_adc_counts, trig_direction, trig_delay, trig_auto, preTriggerSamples, postTriggerSamples,
+                complxTrig, trig_conditions, trig_properties, trig_adc_counts, trig_directions, trig_delay, trig_auto, preTriggerSamples, postTriggerSamples,
                 timebase, segments, captures, downsampling_ratio_mode, downsampling_ratio): #Measured deadtime between calls ~~3/160000 seconds/totalSamples (in data) [Rule of thumb]
     '''
     chandle -> Picoscope handle
@@ -47,17 +48,39 @@ def data_rapid_block(chandle, status, channel, coupling, crange, offset,
             False -> 2
         such that all parameters within a condition structure are ANDed (channelA AND channelB)
         and all condition structres are then ORed (struct_list1 OR struct_list2 OR struct_list3 OR ...)
+    trig_properties:
+        List of lists, [list1, list2, list3, ...]
+        where each list represents the parameters of a property structure
+        list1 = [thresholdUpper, thresholdUpperHysteresis, thresholdLower, thresholdLowerHysteresis, channel, thresholdMode]
+        such that,
+        thresholdUpper, thresholdUpperHysteresis, thresholdLower, thresholdLowerHysteresis:
+            -> ADC Counts
+        channel:
+            A -> 0
+            B -> 1
+            C -> 2
+            D -> 4
+        thresholdMode:
+            Level -> 0
+            Window -> 1
     trig_adc_counts:
         -32512 <= trig_adc_counts <= +32512 (trigger threshold),
             -32512  -> corresponds to the Minimum Range Voltage
             0 -> corresponds to 0 Volts
             +32512 -> corresponds to the Maximum Range Voltage
-    trig_direction:
-        Above -> 0
-        Below -> 1
-        Rising -> 2
-        Falling -> 3
-        Rising Or Falling -> 4
+    trig_directions:
+        List of numbers indicating the trigger direction for each channel (trigger mode),
+            Above (level)/ Inside (window) -> 0
+            Below (level)/ Outside (window) -> 1
+            Rising (level)/ Enter (window) -> 2
+            Falling (level)/ Exit (window) -> 3
+            Rising Or Falling (level) -> 4
+            Above Lower (level) -> 5
+            Below Lower (level) -> 6
+            Rising Lower (level) -> 7
+            Falling Lower (level) -> 8
+            Positive Runt (level) -> 9
+            Negative Runt (level) -> 10
     trig_delay:
         Arbitrary trigger delay in ms
     trig_auto:
@@ -85,17 +108,19 @@ def data_rapid_block(chandle, status, channel, coupling, crange, offset,
     if 'A' == channel:
         status["setChA"] = ps.ps2000aSetChannel(chandle, 0, 1, coupling, crange, offset)
         assert_pico_ok(status["setChA"])
-        status["trigger"] = ps.ps2000aSetSimpleTrigger(chandle, 1, 0, trig_adc_counts, trig_direction, trig_delay, trig_auto)
-        assert_pico_ok(status["trigger"])
+        if not complexTrig:
+            status["trigger"] = ps.ps2000aSetSimpleTrigger(chandle, 1, 0, trig_adc_counts, trig_direction, trig_delay, trig_auto)
+            assert_pico_ok(status["trigger"])
     elif 'B' == channel:
         status["setChB"] = ps.ps2000aSetChannel(chandle, 1, 1, coupling, crange, offset)
         assert_pico_ok(status["setChB"])
-        status["trigger"] = ps.ps2000aSetSimpleTrigger(chandle, 1, 1, trig_adc_counts, trig_direction, trig_delay, trig_auto)
-        assert_pico_ok(status["trigger"])
+        if not complexTrig:
+            status["trigger"] = ps.ps2000aSetSimpleTrigger(chandle, 1, 1, trig_adc_counts, trig_direction, trig_delay, trig_auto)
+            assert_pico_ok(status["trigger"])
 
     #Check for logical triggering conditions
     if complxTrig:
-        trig_logic_config(chandle, status, trig_conditions)
+        trig_logic_config(chandle, status, trig_conditions, trig_directions, trig_properties, trig_auto)
 
     # Setting the number of sample to be collected
     maxsamples = preTriggerSamples + postTriggerSamples

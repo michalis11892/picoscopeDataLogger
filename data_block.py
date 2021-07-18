@@ -2,17 +2,18 @@ import ctypes
 import numpy as np
 from picosdk.ps2000a import ps2000a as ps
 from picosdk.functions import adc2mV, assert_pico_ok
-from trig_logic_config import trig_logic_config
+from trig_config_macros import trig_logic_config
+from trig_config_macros import trig_pwq_config
 
 def data_block(chandle, status, channel, coupling, crange, offset,
-                complxTrig, trig_conditions, trig_channel, trig_adc_counts, trig_direction, trig_delay, trig_auto, preTriggerSamples, postTriggerSamples,
+                complxTrig, trig_conditions, trig_properties, trig_channel, trig_adc_counts, trig_directions, trig_delay, trig_auto, preTriggerSamples, postTriggerSamples,
                 timebase, downsampling_ratio_mode, downsampling_ratio):
     '''
     chandle -> Picoscope handle
-    status, coupling, crange, offset, trig_conditions -> Lists,
+    status, coupling, crange, offset, trig_conditions, trig_directions, trig_properties -> Lists,
         list[0] -> A channel
         list[1] -> B channel
-    channel, complxTrig, trig_channel, trig_adc_counts, trig_direction, trig_delay, trig_auto, preTriggerSamples, postTriggerSamples, timebase, downsampling_ratio_mode, downsampling_ratio -> Variables
+    channel, complxTrig, pwqTrig, trig_channel, trig_adc_counts, trig_delay, trig_auto, preTriggerSamples, postTriggerSamples, timebase, downsampling_ratio_mode, downsampling_ratio -> Variables
 
     channel:
         'AB' OR 'A' OR 'B' (Any valid permutation of the used channels)
@@ -38,7 +39,7 @@ def data_block(chandle, status, channel, coupling, crange, offset,
     offset:
         Any offset, same units as range
     complxTrig:
-        No conditions -> False
+        No logical conditions -> False
         Logical conditions (AND, OR, etc...) -> True
     trig_conditions:
         List of lists, [list1, list2, list3, ...]
@@ -50,19 +51,41 @@ def data_block(chandle, status, channel, coupling, crange, offset,
             False -> 2
         such that all parameters within a condition structure are ANDed (channelA AND channelB)
         and all condition structres are then ORed (struct_list1 OR struct_list2 OR struct_list3 OR ...)
-    trig_channel:
+    trig_properties:
+        List of lists, [list1, list2, list3, ...]
+        where each list represents the parameters of a property structure
+        list1 = [thresholdUpper, thresholdUpperHysteresis, thresholdLower, thresholdLowerHysteresis, channel, thresholdMode]
+        such that,
+        thresholdUpper, thresholdUpperHysteresis, thresholdLower, thresholdLowerHysteresis:
+            -> ADC Counts
+        channel:
+            A -> 0
+            B -> 1
+            C -> 2
+            D -> 4
+        thresholdMode:
+            Level -> 0
+            Window -> 1
+    trig_channel: [Only matters when complxTrig = False]
         'A' OR 'B' (Single channel trigger only)
-    trig_adc_counts:
+    trig_adc_counts: [Only matters when complxTrig = False]
         -32512 <= trig_adc_counts <= +32512 (trigger threshold),
             -32512  -> corresponds to the Minimum Range Voltage
             0 -> corresponds to 0 Volts
             +32512 -> corresponds to the Maximum Range Voltage
-    trig_direction:
-        Above -> 0
-        Below -> 1
-        Rising -> 2
-        Falling -> 3
-        Rising Or Falling -> 4
+    trig_directions:
+        List of numbers indicating the trigger direction for each channel (trigger mode),
+            Above (level)/ Inside (window) -> 0
+            Below (level)/ Outside (window) -> 1
+            Rising (level)/ Enter (window) -> 2
+            Falling (level)/ Exit (window) -> 3
+            Rising Or Falling (level) -> 4
+            Above Lower (level) -> 5
+            Below Lower (level) -> 6
+            Rising Lower (level) -> 7
+            Falling Lower (level) -> 8
+            Positive Runt (level) -> 9
+            Negative Runt (level) -> 10
     trig_delay:
         Arbitrary trigger delay in ms
     trig_auto:
@@ -91,19 +114,18 @@ def data_block(chandle, status, channel, coupling, crange, offset,
         status["setChB"] = ps.ps2000aSetChannel(chandle, 1, 1, coupling[1], crange[1], offset[1])
         assert_pico_ok(status["setChB"])
 
-    #Set triggers
-    if trig_channel == 'A':
-        status["trigger"] = ps.ps2000aSetSimpleTrigger(chandle, 1, 0, trig_adc_counts, trig_direction, trig_delay, trig_auto)
+    #Check for logical triggering conditions
+    if complxTrig:
+        trig_logic_config(chandle, status, trig_conditions, trig_directions, trig_properties, trig_auto)
+    #Set Simple level triggers
+    elif trig_channel == 'A':
+        status["trigger"] = ps.ps2000aSetSimpleTrigger(chandle, 1, 0, trig_adc_counts, trig_directions[0], trig_delay, trig_auto)
         assert_pico_ok(status["trigger"])
     elif trig_channel == 'B':
-        status["trigger"] = ps.ps2000aSetSimpleTrigger(chandle, 1, 1, trig_adc_counts, trig_direction, trig_delay, trig_auto)
+        status["trigger"] = ps.ps2000aSetSimpleTrigger(chandle, 1, 1, trig_adc_counts, trig_directions[1], trig_delay, trig_auto)
         assert_pico_ok(status["trigger"])
     else:
         return 'Invalid Trigger Channel'
-
-    #Check for logical triggering conditions
-    if complxTrig:
-        trig_logic_config(chandle, status, trig_conditions)
 
     totalSamples = preTriggerSamples + postTriggerSamples
 
