@@ -1,3 +1,4 @@
 *.note
 *.out
+*0.py
 __pycache__
