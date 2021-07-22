@@ -36,11 +36,12 @@ sigGen_stndrd(chandle, status, 0, 1000000, 0, 100, 10000, 100, 0.1, 0, 0, 0, 0, 
 channels_ = [0, 1]
 preTriggerSamples = 25000
 postTriggerSamples = 25000
-timebase = 8
+timebase = 32
 totalSamples = preTriggerSamples+postTriggerSamples
 segments = 1
-channel_config(chandle, status, 1, channels_, 0, 7, 0) #Configure channel A
-trig_simple_config(chandle, status, 1, 0, 1024, 2, 0, 1000) #Setup a simple trigger
+channel_config(chandle, status, 1, channels_, 0, [7, 7], 0) #Configure channels
+#trig_simple_config(chandle, status, 1, 0, 1024, 2, 0, 1000) #Setup a simple trigger
+trig_logic_config(chandle, status, [[1, 0, 0, 0, 0, 0, 0, 0], [0, 1, 0, 0, 0, 0, 0, 0]], [2, 2, 0, 0, 0, 0], [[1024, 500, 0, 0, 0, 0], [1024, -500, 0, 0, 1, 0]], 1000)
 time_ = timebase_block_config(chandle, status, timebase, totalSamples) #Setup timebase and time axis
 buffersMax, buffersMin = buffer_block_config(chandle, status, channels_, totalSamples, segments, 0) #Setup buffer and segments
 buff = []
@@ -70,7 +71,7 @@ timebase = 8
 totalSamples = preTriggerSamples+postTriggerSamples
 segments = 3
 captures = 3
-channel_config(chandle, status, 1, channels_, 0, 7, 0) #Configure channels
+channel_config(chandle, status, 1, channels_, 0, [7, 7], 0) #Configure channels
 trig_simple_config(chandle, status, 1, 0, 1024, 2, 0, 1000) #Setup a simple trigger
 time_ = timebase_block_config(chandle, status, timebase, totalSamples) #Setup timebase and time axis
 segment_capture_config(chandle, status, segments, captures, totalSamples) #Setup memory segmentation & capture configuration
@@ -105,7 +106,7 @@ totalRuntime = 12500000 #In sampleUnits
 sampleInterval = int(totalRuntime/totalSamples)
 sampleUnits = 2
 segments = 1
-channel_config(chandle, status, 1, channels_, 0, 7, 0) #Configure channels
+channel_config(chandle, status, 1, channels_, 0, [7, 7], 0) #Configure channels
 #trig_simple_config(chandle, status, 1, 0, 1024, 2, 0, 1000) #Setup a simple trigger
 time_ = timebase_stream_config(totalSamples, sampleInterval, sampleUnits) #Setup timebase and time axis
 buffersComplete, buffersMax, buffersMin = buffer_stream_config(chandle, status, channels_, totalSamples, sizeOfOneBuffer, segments, 0) #Setup buffers
