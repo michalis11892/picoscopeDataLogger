@@ -13,8 +13,12 @@ def adc_to_mV(chandle, status, buffer, crange):
 
     # convert ADC counts data to mV
     temp = []
-    for segment in buffer:
-        temp += adc2mV(segment, crange, maxADC)
+    try:
+        for segment in buffer:
+            check = len(segment) #Will create an exception if segment isnt an array
+            temp += adc2mV(segment, crange, maxADC)
+    except:
+        temp += adc2mV(buffer, crange, maxADC)
 
     return temp
 
