@@ -39,3 +39,7 @@ def trig_logic_config(chandle, status, trig_conditions, trig_directions, trig_pr
     prop_list_c = (PS2000A_TRIGGER_CHANNEL_PROPERTIES * len(prop_list))(*prop_list)
     status["setTriggerChannelProperties"] = ps.ps2000aSetTriggerChannelProperties(chandle, ctypes.byref(prop_list_c),  ctypes.c_int16(len(prop_list)), ctypes.c_int16(1), ctypes.c_int32(trig_auto))
     assert_pico_ok(status["setTriggerChannelProperties"])
+
+def trig_simple_config(chandle, status, enable, channel, trig_adc_counts, trig_direction, trig_delay, trig_auto):
+    status["trigger"] = ps.ps2000aSetSimpleTrigger(chandle, enable, channel, trig_adc_counts, trig_direction, trig_delay, trig_auto)
+    assert_pico_ok(status["trigger"])
