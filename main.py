@@ -34,23 +34,24 @@ sigGen_stndrd(chandle, status, 0, 1000000, 0, 100, 10000, 100, 0.1, 0, 0, 0, 0, 
 
 #TEST data_block()
 channels_ = [0, 1]
-preTriggerSamples = 25000
-postTriggerSamples = 25000
+preTriggerSamples = 2500
+postTriggerSamples = 2500
 timebase = 32
 totalSamples = preTriggerSamples+postTriggerSamples
 segments = 1
-channel_config(chandle, status, 1, channels_, 0, [7, 7], 0) #Configure channels
+channel_config(chandle, status, 1, channels_, [0, 0], [6, 6], [0, 0]) #Configure channels
 #trig_simple_config(chandle, status, 1, 0, 1024, 2, 0, 1000) #Setup a simple trigger
-trig_logic_config(chandle, status, [[1, 0, 0, 0, 0, 0, 0, 0], [0, 1, 0, 0, 0, 0, 0, 0]], [2, 2, 0, 0, 0, 0], [[1024, 500, 0, 0, 0, 0], [1024, -500, 0, 0, 1, 0]], 1000)
+trig_logic_config(chandle, status, [[1, 2, 0, 0, 0, 0, 0, 0]], [2, 2, 0, 0, 0, 0], [[1024, 300, 0, 0, 0, 0], [1024, 300, 0, 0, 1, 0]], 1000)
 time_ = timebase_block_config(chandle, status, timebase, totalSamples) #Setup timebase and time axis
 buffersMax, buffersMin = buffer_block_config(chandle, status, channels_, totalSamples, segments, 0) #Setup buffer and segments
 buff = []
+clear_file('test.out')
 for i in range(3):
     data_block(chandle, status, preTriggerSamples, postTriggerSamples, timebase, 0, 0) #Get data
     buff.append(copy.deepcopy(buffersMax))
 for indx in range(len(buff)):
     run = buff[indx]
-    run = run_to_mV(chandle, status, run, channels_, 7, totalSamples, segments)
+    run = run_to_mV(chandle, status, run, channels_, [6, 6], totalSamples, segments)
     if True: #True for plots
         for i in range(len(channels_)):
             run_channel = run[i]
@@ -77,6 +78,7 @@ time_ = timebase_block_config(chandle, status, timebase, totalSamples) #Setup ti
 segment_capture_config(chandle, status, segments, captures, totalSamples) #Setup memory segmentation & capture configuration
 buffersMax, buffersMin = buffer_block_config(chandle, status, channels_, totalSamples, segments, 0) #Setup buffer and segments
 buff = []
+clear_file('test.out')
 for i in range(2):
     data_rapid_block(chandle, status, preTriggerSamples, postTriggerSamples, timebase, segments, captures, 0, 0) #Get data
     buff.append(copy.deepcopy(buffersMax))
@@ -111,6 +113,7 @@ channel_config(chandle, status, 1, channels_, 0, [7, 7], 0) #Configure channels
 time_ = timebase_stream_config(totalSamples, sampleInterval, sampleUnits) #Setup timebase and time axis
 buffersComplete, buffersMax, buffersMin = buffer_stream_config(chandle, status, channels_, totalSamples, sizeOfOneBuffer, segments, 0) #Setup buffers
 buff = []
+clear_file('test.out')
 for i in range(2):
     data_streaming(chandle, status, sampleInterval, 0, buffersComplete, buffersMax, sizeOfOneBuffer, sampleUnits, preTriggerSamples, postTriggerSamples, 0, 1) #Get data
     buff.append(copy.deepcopy(buffersComplete))
