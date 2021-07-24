@@ -22,10 +22,10 @@ def adc_to_mV(chandle, status, buffer, crange):
 
     return temp
 
-def run_to_mV(chandle, status, run, channels_, crange, totalSamples, segments):
+def run_to_mV(chandle, status, run, channels_, cranges_, totalSamples, segments):
     data_mV_segmented = []
     for i in range(len(channels_)):
-        run_channel = adc_to_mV(chandle, status, run[i], 7)
+        run_channel = adc_to_mV(chandle, status, run[i], cranges_[i])
         channel_temp = []
         for j in range(segments):
             channel_temp.append(run_channel[j*totalSamples:(j+1)*totalSamples])
@@ -41,4 +41,8 @@ def run_to_file(time_, run, channels_, segments, runIndx, fileName):
             f.write('--------------------------------------------------------------------=[Segment '+str(segment+1)+']=--------------------------------------------------------------------\n')
             for element in range(len(run[channel][segment])):
                 f.write(str(time_[element])+', '+str(run[channel][segment][element])+'\n')
+    f.close()
+
+def clear_file(fileName):
+    f = open(fileName, 'w')
     f.close()
