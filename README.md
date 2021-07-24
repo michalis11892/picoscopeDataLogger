@@ -10,7 +10,7 @@ And. optionally, for the examples in main.py
 - matplotlib
 
 Users should also make sure that they have the correct drivers and SDK installed for their respective PicoScope.
-These can be found in the official PicoTech website, [here](https://www.picotech.com/downloads)
+These can be found in the official PicoTech website, [*here*](https://www.picotech.com/downloads)
 
 
 **IMPORTANT:** Please make sure that your python architecture and your installed PicoScope driver architecture are the same, if this is not the case then the software will fail to identify any connected units.
@@ -65,9 +65,76 @@ Since each of these modes works slightly differently from each other, they requi
 11. Close the scope using stop_scope()
 
 ## Apendix:
-### Capture Configuration Macros
-### Data Capture Macros
-### Data Processing Macros
-### Power Operation Macros
-### Signal Generator Macros
-### Trigger Configuration Macros
+Some universal parameters that appear in almost every macro are,
+>***chandle***, c_int16 type variable that acts as a handle for the opened scope. It is aquired from the start_scope() macro\
+>***status***, a dictionary that stores all output codes of all run opreations to the scope. Useful for debugging
+
+These wil not be referenced again for the sake of simplicity
+
+### Capture Configuration Macros:
+- **channel_config**(chandle, status, enable, channels_, couplings_, cranges_, offsets_)
+>***enable***, takes a value of either 0 or 1 and determines whether the macro will enable or disable these channeles respectively \
+>***channels_***, list of integers from 0 - 3, representing channels A - D, respectively \
+>***couplings_***, list of integers with values 0 or 1, representing AC or DC respectively. One element per channel, corresponidng to the same order as *channels_* \
+>***cranges_***, list of integers from 0 - 11, representing 10 mV, 20 mV, 50 mV, 100 mV, 200 mV, 500 mV, 1 V, 2 V, 5 V, 10 V, 20 V, 50 V, respectively. One element per channel, corresponidng to the same order as *channels_* \
+>***offsets_***, list of integers corresponding to the offset (in mV). One element per channel, corresponidng to the same order as *channels_*
+
+- **timebase_block_config**(chandle, status, timebase, totalSamples)
+>***timebase***, arbitrary integer *n* representing the sample interval. This can be calculated as such:\
+ If 2 >= n >= 0, then, sample interval = (2^n)/maximum sampling rate\
+ If n > 2, then, sample interval = 8(n - 2)/maximum sampling rate \
+>***totalSamples***, arbitrary integer representing the toal number of samples to be taken
+
+- **timebase_stream_config**(totalSamples, sampleInterval, sampleUnits)
+>***totalSamples***, arbitrary integer representing the total number of samples to be taken \
+>***sampleInterval***, arbitrary integer representing the time difference between samples, in *sampleUnits* \
+>***sampleUnits***, integer representing the time units of *sampleInterval*, with values, from 0 - 5, representing fs, ps, ns, μs, ms, s respectively \
+
+- **buffer_block_config**(chandle, status, channels_, totalSamples, segments, downsampling_ratio_mode)
+>***channels_***, list of integers from 0 - 3, representing channels A - D, respectively \
+>***totalSamples***, arbitrary integer representing the toal number of samples to be taken \
+>***segments***, arbitrary integer representing the number of segments that the picoscopes memory will be split into aka the number of waveform captures that can be stored at once before data transfer to a PC is required (one waveform per segment) \
+>***downsampling_ratio_mode***, integer of a value [0, 1 ,2 ,4] which represents [None, Aggregate, Decimal, Average]
+
+- **buffer_stream_config**(chandle, status, channels_, totalSamples, sizeOfOneBuffer, segments, downsampling_ratio_mode)
+>
+- **segment_capture_config**(chandle, status, segments, captures, totalSamples)
+>
+
+### Data Capture Macros:
+- **data_block**(chandle, status, preTriggerSamples, postTriggerSamples, timebase, downsampling_ratio_mode, downsampling_ratio)
+>
+- **data_rapid_block**(chandle, status, preTriggerSamples, postTriggerSamples, timebase, segments, captures, downsampling_ratio_mode, downsampling_ratio)
+>
+- **data_streaming**(chandle, status, sampleInterval, autoStopOn, buffersComplete, buffersMax, sizeOfOneBuffer, sampleUnits, preTriggerSamples, postTriggerSamples, downsampling_ratio_mode, downsampling_ratio)
+>
+
+### Data Processing Macros:
+- **adc_to_mV**(chandle, status, buffer, crange)
+>
+- **run_to_mV**(chandle, status, run, channels_, cranges_, totalSamples, segments)
+>
+- **run_to_file**(time_, run, channels_, segments, runIndx, fileName)
+>
+- **clear_file**(fileName)
+>
+
+### Power Operation Macros:
+- **start_scope**(handles, serial = None)
+>
+- **stop_scope**(handles)
+>
+- **restart_scope**(handles, serial = None)
+>
+
+### Signal Generator Macros:
+- **sigGen_stndrd**(chandle, status, offsetVoltage, pkToPk, waveType,  startFrequency, stopFrequency, increment, dwellTime, sweepType, operation, shots, sweeps, triggerType, triggerSource, extInThreshold)
+>
+
+### Trigger Configuration Macros:
+- **trig_pwq_config**(chandle, status, trig_pwq_conditions, trig_direction, trig_lower, trig_upper, trig_type)
+>
+- **trig_logic_config**(chandle, status, trig_conditions, trig_directions, trig_properties, trig_auto)
+>
+- **trig_simple_config**(chandle, status, enable, channel, trig_adc_counts, trig_direction, trig_delay, trig_auto)
+>
