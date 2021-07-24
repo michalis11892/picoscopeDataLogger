@@ -5,10 +5,10 @@ from picosdk.functions import adc2mV, assert_pico_ok
 
 channels = ['A', 'B', 'C', 'D']
 
-def channel_config(chandle, status, enable, channels_, coupling, cranges_, offset):
+def channel_config(chandle, status, enable, channels_, coupling, cranges_, offsets_):
     for i in range(len(channels_)):
         indx = "setCh"+channels[channels_[i]]
-        status[indx] = ps.ps2000aSetChannel(chandle, channels_[i], enable, coupling, cranges_[i], offset)
+        status[indx] = ps.ps2000aSetChannel(chandle, channels_[i], enable, coupling, cranges_[i], offsets_[i])
         assert_pico_ok(status[indx])
 
 def timebase_block_config(chandle, status, timebase, totalSamples):
