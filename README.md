@@ -72,7 +72,8 @@ Some universal parameters that appear in almost every macro are,
 These wil not be referenced again for the sake of simplicity
 
 ### Capture Configuration Macros:
-- **channel_config**(chandle, status, enable, channels_, couplings_, cranges_, offsets_)
+***
+**channel_config**(chandle, status, enable, channels_, couplings_, cranges_, offsets_)
 >***enable***, takes a value of either 0 or 1 and determines whether the macro will enable or disable these channeles respectively \
 >***channels_***, list of integers from 0 - 3, representing channels A - D, respectively,
 ```
@@ -105,7 +106,7 @@ These wil not be referenced again for the sake of simplicity
 >One element per channel, corresponding to the same order as *channels_* \
 >***offsets_***, list of integers corresponding to the offset (in mV). One element per channel, corresponidng to the same order as *channels_*
 
-- **timebase_block_config**(chandle, status, timebase, totalSamples)
+**timebase_block_config**(chandle, status, timebase, totalSamples)
 >***timebase***, arbitrary integer *n* representing the sample interval suhc that,
 ```
 If 2 >= n >= 0, then, sample interval = (2^n)/maximum sampling rate
@@ -118,7 +119,7 @@ If n > 2, then, sample interval = 8(n - 2)/maximum sampling rate
 >***sampleInterval***, arbitrary integer representing the time difference between samples, in *sampleUnits* \
 >***sampleUnits***, integer representing the time units of *sampleInterval*, with values, from 0 - 5, representing fs, ps, ns, μs, ms, s respectively
 
-- **buffer_block_config**(chandle, status, channels_, totalSamples, segments, downsampling_ratio_mode)
+**buffer_block_config**(chandle, status, channels_, totalSamples, segments, downsampling_ratio_mode)
 >***channels_***, list of integers from 0 - 3, representing channels A - D, respectively,
 ```
   - A -> 0
@@ -136,7 +137,7 @@ If n > 2, then, sample interval = 8(n - 2)/maximum sampling rate
   - Average -> 4
 ```
 
-- **buffer_stream_config**(chandle, status, channels_, totalSamples, sizeOfOneBuffer, segments, downsampling_ratio_mode)
+**buffer_stream_config**(chandle, status, channels_, totalSamples, sizeOfOneBuffer, segments, downsampling_ratio_mode)
 >***channels_***, list of integers from 0 - 3, representing channels A - D, respectively,
 ```
   - A -> 0
@@ -155,13 +156,14 @@ If n > 2, then, sample interval = 8(n - 2)/maximum sampling rate
   - Average -> 4
 ```
 
-- **segment_capture_config**(chandle, status, segments, captures, totalSamples)
+**segment_capture_config**(chandle, status, segments, captures, totalSamples)
 >***segments***, arbitrary integer representing the number of segments that the picoscopes memory will be split into aka the number of waveform captures that can be stored at once before data transfer to a PC is required (one waveform per segment) \
 >***captures***, arbitrary integer, equal or smaller to *segments* representing the number of captures to take \
 >***totalSamples***, arbitrary integer representing the toal number of samples to be taken
 
 ### Data Capture Macros:
-- **data_block**(chandle, status, preTriggerSamples, postTriggerSamples, timebase, downsampling_ratio_mode, downsampling_ratio)
+***
+**data_block**(chandle, status, preTriggerSamples, postTriggerSamples, timebase, downsampling_ratio_mode, downsampling_ratio)
 >***preTriggerSamples***, arbitrary integer representing the number of samples to take before the trigger event time \
 >***postTriggerSamples***, arbitrary integer representing the number of samples to take after the trigger event time \
 >***timebase***, arbitrary integer *n* representing the sample interval suhc that,
@@ -176,9 +178,9 @@ If n > 2, then, sample interval = 8(n - 2)/maximum sampling rate
   - Decimate -> 2
   - Average -> 4
 ```
- >***downsampling_ratio***, arbitrary integer *n* fed to the selected *downsampling_ratio_mode* from above
+>***downsampling_ratio***, arbitrary integer *n* fed to the selected *downsampling_ratio_mode* from above
 
-- **data_rapid_block**(chandle, status, preTriggerSamples, postTriggerSamples, timebase, segments, captures, downsampling_ratio_mode, downsampling_ratio)
+**data_rapid_block**(chandle, status, preTriggerSamples, postTriggerSamples, timebase, segments, captures, downsampling_ratio_mode, downsampling_ratio)
 >***preTriggerSamples***, arbitrary integer representing the number of samples to take before the trigger event time \
 >***postTriggerSamples***, arbitrary integer representing the number of samples to take after the trigger event time \
 >***timebase***, arbitrary integer *n* representing the sample interval suhc that,
@@ -197,7 +199,7 @@ If n > 2, then, sample interval = 8(n - 2)/maximum sampling rate
 ```
 >***downsampling_ratio***, arbitrary integer *n* fed to the selected *downsampling_ratio_mode* from above
 
-- **data_streaming**(chandle, status, sampleInterval, autoStopOn, buffersComplete, buffersMax, sizeOfOneBuffer, sampleUnits, preTriggerSamples, postTriggerSamples, downsampling_ratio_mode, downsampling_ratio)
+**data_streaming**(chandle, status, sampleInterval, autoStopOn, buffersComplete, buffersMax, sizeOfOneBuffer, sampleUnits, preTriggerSamples, postTriggerSamples, downsampling_ratio_mode, downsampling_ratio)
 >***sampleInterval***, arbitrary integer representing the time interval between samples in *sampleUnits* units \
 >***autoStopOn***, integer 0 OR 1, representing True OR False respectively \
 >***buffersComplete***, list of lists, returned by *buffer_stream_config()*. It contains the complete captuyre buffer after every run of *data_streaming()* \
@@ -217,11 +219,12 @@ If n > 2, then, sample interval = 8(n - 2)/maximum sampling rate
 >***downsampling_ratio***, arbitrary integer *n* fed to the selected *downsampling_ratio_mode* from above
 
 ### Data Processing Macros:
-- **adc_to_mV**(chandle, status, buffer, crange)
+***
+**adc_to_mV**(chandle, status, buffer, crange)
 >***buffer***, list representing an element of a buffer from a *Data Capture Macro* \
 >***crange***, integer from 0 - 11, representing 10 mV, 20 mV, 50 mV, 100 mV, 200 mV, 500 mV, 1 V, 2 V, 5 V, 10 V, 20 V, 50 V, respectively
 
-- **run_to_mV**(chandle, status, run, channels_, cranges_, totalSamples, segments)
+**run_to_mV**(chandle, status, run, channels_, cranges_, totalSamples, segments)
 >***run***, list of lists, repsenting a buffer from a *Data Capture Macro* \
 >***channels_***, list of integers from 0 - 3, representing channels A - D, respectively,
 ```
@@ -249,7 +252,7 @@ If n > 2, then, sample interval = 8(n - 2)/maximum sampling rate
 >***totalSamples***, arbitrary integer representing the toal number of samples to be taken \
 >***segments***, arbitrary integer representing the number of segments that the picoscopes memory will be split into aka the number of waveform captures that can be stored at once before data transfer to a PC is required (one waveform per segment)
 
-- **run_to_file**(time_, run, channels_, segments, runIndx, fileName)
+**run_to_file**(time_, run, channels_, segments, runIndx, fileName)
 >***time_***, list of floats that represent the timestamp of each sample taken sequentially. It is returned by *timebase_block_config()* & *timebase_stream_config()* \
 >***run***, list of lists, repsenting a buffer from a *Data Capture Macro* \
 >***channels_***, list of integers from 0 - 3, representing channels A - D, respectively,
@@ -263,23 +266,25 @@ If n > 2, then, sample interval = 8(n - 2)/maximum sampling rate
 >***runIndx***, arbitrary integer representing the current count of the run that is being processed \
 >***fileName***, name of the file to save the run in (including the extension)
 
-- **clear_file**(fileName)
+**clear_file**(fileName)
 >***fileName***, name of the file to save the run in (including the extension)
 
 ### Power Operation Macros:
-- **start_scope**(handles, serial = None)
+***
+**start_scope**(handles, serial = None)
 >***handles***, c_int16 type variable that acts as a handle for the opened scope. It is aquired from the start_scope() macro \
 >***serial***, optional argument representing the serial number of a specific scope that the macro should open
 
-- **stop_scope**(handles)
+**stop_scope**(handles)
 >***handles***, c_int16 type variable that acts as a handle for the opened scope. It is aquired from the start_scope() macro
 
-- **restart_scope**(handles, serial = None)
+**restart_scope**(handles, serial = None)
 >***handles***, c_int16 type variable that acts as a handle for the opened scope. It is aquired from the start_scope() macro \
 >***serial***, optional argument representing the serial number of a specific scope that the macro should open
 
 ### Signal Generator Macros:
-- **sigGen_stndrd**(chandle, status, offsetVoltage, pkToPk, waveType, startFrequency, stopFrequency, increment, dwellTime, sweepType, operation, shots, sweeps, triggerType, triggerSource, extInThreshold)
+***
+**sigGen_stndrd**(chandle, status, offsetVoltage, pkToPk, waveType, startFrequency, stopFrequency, increment, dwellTime, sweepType, operation, shots, sweeps, triggerType, triggerSource, extInThreshold)
 >***offsetVoltage***, arbitrary integer representing the voltage offset of the signal generated (in μV) \
 >***pkToPk***, arbitrary integer representing the peak-to-peak voltage of the signal generated (in μV) \
 >***waveType***, integer between 0 - 8 representing the waveform of the signal such that,
@@ -342,7 +347,8 @@ If n > 2, then, sample interval = 8(n - 2)/maximum sampling rate
 >***extInThreshold***, arbitrary integer that represents trigger level, in ADC counts, for external trigger
 
 ### Trigger Configuration Macros:
-- **trig_pwq_config**(chandle, status, trig_pwq_conditions, trig_direction, trig_lower, trig_upper, trig_type)
+***
+**trig_pwq_config**(chandle, status, trig_pwq_conditions, trig_direction, trig_lower, trig_upper, trig_type)
 >***trig_pwq_conditions***, list of lists, where each list contains the conditions for a PS2000A_PWQ_CONDITIONS structure, which are effectively ANDed together to return one logical result per structure, and then all structure results are ORed together to return the final state of the qualifier. Each structure takes 7 conditions which have a specific position in a sublist,
 ```
 Channel A -> Position 0
@@ -386,7 +392,7 @@ Digital -> Position 6
   - Pulse width not between lower and upper -> 4
 ```
 
-- **trig_logic_config**(chandle, status, trig_conditions, trig_directions, trig_properties, trig_auto)
+**trig_logic_config**(chandle, status, trig_conditions, trig_directions, trig_properties, trig_auto)
 >***trig_conditions***, list of lists, where each list contains the conditions for a PS2000A_TRIGGER_CONDITIONS structure, which are effectively ANDed together to return one logical result per structure, and then all structure results are ORed together to return the final state of the complex trigger. Each structure takes 7 conditions which have a specific position in a sublist,
 ```
 Channel A -> Position 0
@@ -455,7 +461,7 @@ Threshold Mode -> Position 5
   - Window -> 1
 ```
 
-- **trig_simple_config**(chandle, status, enable, channel, trig_adc_counts, trig_direction, trig_delay, trig_auto)
+**trig_simple_config**(chandle, status, enable, channel, trig_adc_counts, trig_direction, trig_delay, trig_auto)
 >***enable***, takes a value of either 0 or 1 and determines whether the macro will enable or disable these channeles respectively \
 >***channel***, integer from 0 - 3, representing channels A - D, respectively,
 ```
