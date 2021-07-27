@@ -114,7 +114,7 @@ If n > 2, then, sample interval = 8(n - 2)/maximum sampling rate
 ```
 >***totalSamples***, arbitrary integer representing the toal number of samples to be taken
 
-- **timebase_stream_config**(totalSamples, sampleInterval, sampleUnits)
+**timebase_stream_config**(totalSamples, sampleInterval, sampleUnits)
 >***totalSamples***, arbitrary integer representing the total number of samples to be taken \
 >***sampleInterval***, arbitrary integer representing the time difference between samples, in *sampleUnits* \
 >***sampleUnits***, integer representing the time units of *sampleInterval*, with values, from 0 - 5, representing fs, ps, ns, μs, ms, s respectively
