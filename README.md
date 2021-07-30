@@ -77,8 +77,8 @@ These wil not be referenced again for the sake of simplicity
 > - ps2000a
 > - ps3000a
 > - etc...
-> 
->Automatically replaces the correct detected driver version in the code to make it compatible with alternative drivers and picoscopes beyond the default ps2000a
+>
+>Automatically replaces the correct detected driver version in the code to make it compatible with alternative drivers and picoscopes beyond the default ps2000a. If *driver* parameter is not specified, it will be auto-detected
 
 ### Capture Configuration Macros:
 ***
