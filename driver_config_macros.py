@@ -1,5 +1,5 @@
 #Autodetect driver version for single connected picoscope
-from picosdk.discover import find_all_units
+from picosdk.discover import find_unit
 import fileinput
 from os import listdir
 
@@ -7,10 +7,11 @@ def driver_replacement(driver = None):
     f = open('driver.log', 'r')
     to_replace = f.readline().replace('\n', '') #Current default present for this is ps2000a
     f.close()
-    
+
     if driver == None:
-        scopes = find_all_units() #Will contain infomration on all connected picoscopes
-        driver = str(scopes[0].info.driver).split(' ')[1]
+        scope = find_unit() #Will contain infomration on all connected picoscopes
+        driver = str(scope.info.driver).split(' ')[1]
+        scope.close()
     if driver == to_replace:
         return 0
 
