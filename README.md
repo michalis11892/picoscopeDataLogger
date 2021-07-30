@@ -55,7 +55,7 @@ Since each of these modes works slightly differently from each other, they requi
 1. Open the scope using start_scope()
 2. Configure the channels that will be used for the data capture using channel_config()
 3. Configure a timebase to be used for the capture using timebase_stream_config()
-4. [*Optionally*] Setup trigger(s) using, depending on the use-case, trig_simple_config() OR trig_logic_config()
+4. [*Optional*] Setup trigger(s) using, depending on the use-case, trig_simple_config() OR trig_logic_config()
 5. Configure buffer(s) & segment(s) using buffer_stream_config()
 6. Capture data using data_streaming()
 7. Deepcopy the data from the buffer
@@ -70,6 +70,15 @@ Some universal parameters that appear in almost every macro are,
 >***status***, a dictionary that stores all output codes of all run operations to the scope. *Useful for debugging*
 
 These wil not be referenced again for the sake of simplicity
+### Driver Configuration Macros:
+***
+**driver_replacement**(driver = None)
+>***driver***, [*Optional*] driver version with compatible methods i.e.,
+> - ps2000a
+> - ps3000a
+> - etc...
+> 
+>Automatically replaces the correct detected driver version in the code to make it compatible with alternative drivers and picoscopes beyond the default ps2000a
 
 ### Capture Configuration Macros:
 ***
