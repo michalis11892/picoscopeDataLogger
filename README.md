@@ -1,5 +1,5 @@
 # Picoscope Data Logger
-Simple python code that provides an interface (set of macros) for picoscopes to be used for extended data logging beyond the current functionality of proprietary software
+Simple python code that provides an interface (set of macros & GUI [WIP]) for picoscopes to be used for extended data logging beyond the current functionality of proprietary software
 
 ## Pre-requisites:
 In order to effectively use this code, you should install the following python packages through pip:
