@@ -5,9 +5,7 @@ from matplotlib import pyplot as plt
 from picosdk.ps2000a import ps2000a as ps
 from picosdk.functions import assert_pico_ok
 import time
-'''from data_block import data_block
-from data_rapid_block import data_rapid_block
-from data_streaming import data_streaming'''
+from driver_config_macros import *
 from data_capture_macros import *
 from signal_generator_macros import *
 from power_operation_macros import *
@@ -21,12 +19,16 @@ scopes = find_all_units() #Will contain infomration on all connected picoscopes
 str(scopes[0].info.driver).split(' ')[1]
 '''
 
+driver_replacement()
+
 channels = ['A', 'B', 'C', 'D']
 
 chandle = ctypes.c_int16()
 status = {}
 
-start_scope([chandle, status])
+serial = b'GR925/0147'
+
+start_scope([chandle, status], serial)
 
 #TEST sigGen_stndrd()
 sigGen_stndrd(chandle, status, 0, 1000000, 0, 100, 10000, 100, 0.1, 0, 0, 0, 0, 0, 0, 1)
@@ -41,7 +43,7 @@ totalSamples = preTriggerSamples+postTriggerSamples
 segments = 1
 channel_config(chandle, status, 1, channels_, [0, 0], [6, 6], [0, 0]) #Configure channels
 #trig_simple_config(chandle, status, 1, 0, 1024, 2, 0, 1000) #Setup a simple trigger
-trig_logic_config(chandle, status, [[1, 2, 0, 0, 0, 0, 0, 0]], [2, 2, 0, 0, 0, 0], [[1024, 300, 0, 0, 0, 0], [1024, 300, 0, 0, 1, 0]], 1000)
+trig_logic_config(chandle, status, [[1, 2, 0, 0, 0, 0, 0, 0]], [0, 0, 0, 0, 0, 0], [[4096, 1000, 0, 0, 0, 0], [4096, 1000, 0, 0, 1, 0]], 1000)
 time_ = timebase_block_config(chandle, status, timebase, totalSamples) #Setup timebase and time axis
 buffersMax, buffersMin = buffer_block_config(chandle, status, channels_, totalSamples, segments, 0) #Setup buffer and segments
 buff = []
