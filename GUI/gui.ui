@@ -6,27 +6,27 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>802</width>
-    <height>604</height>
+    <width>801</width>
+    <height>580</height>
    </rect>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>801</width>
+    <height>580</height>
+   </size>
   </property>
   <property name="windowTitle">
    <string>Logger</string>
+  </property>
+  <property name="windowIcon">
+   <iconset>
+    <normaloff>icon.png</normaloff>icon.png</iconset>
   </property>
   <widget class="QWidget" name="centralwidget">
    <property name="enabled">
     <bool>true</bool>
    </property>
-   <widget class="QWidget" name="graphWidget" native="true">
-    <property name="geometry">
-     <rect>
-      <x>20</x>
-      <y>130</y>
-      <width>471</width>
-      <height>391</height>
-     </rect>
-    </property>
-   </widget>
    <widget class="QLabel" name="driverLabel">
     <property name="geometry">
      <rect>
@@ -1138,7 +1138,7 @@
     <widget class="QLabel" name="triggerUpperThresholdLabel">
      <property name="geometry">
       <rect>
-       <x>60</x>
+       <x>50</x>
        <y>50</y>
        <width>51</width>
        <height>31</height>
@@ -1456,7 +1456,7 @@
     <widget class="QLabel" name="triggerUpperHysteresisLabel">
      <property name="geometry">
       <rect>
-       <x>120</x>
+       <x>110</x>
        <y>50</y>
        <width>51</width>
        <height>31</height>
@@ -1524,7 +1524,7 @@
     <widget class="QLabel" name="triggerLowerHysteresisLabel">
      <property name="geometry">
       <rect>
-       <x>240</x>
+       <x>230</x>
        <y>50</y>
        <width>51</width>
        <height>31</height>
@@ -1592,7 +1592,7 @@
     <widget class="QLabel" name="triggerLowerThresholdLabel">
      <property name="geometry">
       <rect>
-       <x>180</x>
+       <x>170</x>
        <y>50</y>
        <width>51</width>
        <height>31</height>
@@ -1747,7 +1747,7 @@
       <rect>
        <x>140</x>
        <y>240</y>
-       <width>61</width>
+       <width>71</width>
        <height>16</height>
       </rect>
      </property>
@@ -1812,7 +1812,7 @@
       <rect>
        <x>140</x>
        <y>300</y>
-       <width>61</width>
+       <width>71</width>
        <height>16</height>
       </rect>
      </property>
@@ -1877,7 +1877,7 @@
       <rect>
        <x>140</x>
        <y>280</y>
-       <width>61</width>
+       <width>71</width>
        <height>16</height>
       </rect>
      </property>
@@ -1955,7 +1955,7 @@
       <rect>
        <x>140</x>
        <y>260</y>
-       <width>61</width>
+       <width>71</width>
        <height>16</height>
       </rect>
      </property>
@@ -2020,7 +2020,7 @@
       <rect>
        <x>140</x>
        <y>220</y>
-       <width>61</width>
+       <width>71</width>
        <height>16</height>
       </rect>
      </property>
@@ -2197,18 +2197,83 @@
      </rect>
     </property>
    </widget>
+   <widget class="QTabWidget" name="tabWidget">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>130</y>
+      <width>471</width>
+      <height>391</height>
+     </rect>
+    </property>
+    <property name="currentIndex">
+     <number>0</number>
+    </property>
+    <widget class="QWidget" name="run_1">
+     <attribute name="title">
+      <string>Run 1</string>
+     </attribute>
+     <widget class="QStackedWidget" name="stackedWidget">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>461</width>
+        <height>361</height>
+       </rect>
+      </property>
+      <property name="currentIndex">
+       <number>1</number>
+      </property>
+      <widget class="QWidget" name="capture_1"/>
+      <widget class="QWidget" name="capture_2"/>
+     </widget>
+    </widget>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>802</width>
+     <width>801</width>
      <height>21</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menuPreset">
+    <property name="title">
+     <string>Presets</string>
+    </property>
+    <addaction name="actionSave_as_a_Preset"/>
+    <addaction name="actionSave_Preset"/>
+    <addaction name="actionLoad_Preset"/>
+   </widget>
+   <addaction name="menuPreset"/>
   </widget>
-  <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionSave_as_a_Preset">
+   <property name="text">
+    <string>Save as a Preset</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+S</string>
+   </property>
+  </action>
+  <action name="actionLoad_Preset">
+   <property name="text">
+    <string>Load Preset</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+O</string>
+   </property>
+  </action>
+  <action name="actionSave_Preset">
+   <property name="text">
+    <string>Save Preset</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+S</string>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections/>
