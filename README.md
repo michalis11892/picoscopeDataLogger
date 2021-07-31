@@ -122,7 +122,13 @@ These wil not be referenced again for the sake of simplicity
 **timebase_stream_config**(totalSamples, sampleInterval, sampleUnits)
 >***totalSamples***, arbitrary integer representing the total number of samples to be taken \
 >***sampleInterval***, arbitrary integer representing the time difference between samples, in *sampleUnits* \
->***sampleUnits***, integer representing the time units of *sampleInterval*, with values, from 0 - 5, representing fs, ps, ns, μs, ms, s respectively
+>***sampleUnits***, integer representing the time units of *sampleInterval*, with values, from 0 - 5, representing fs, ps, ns, μs, ms, s respectively, such that,
+> - Femptoseconds -> 0
+> - Picoseconds -> 1
+> - Nanoseconds -> 2
+> - Microseconds -> 3
+> - Milliseconds -> 4
+> - Seconds -> 5
 
 **buffer_block_config**(chandle, status, channels_, totalSamples, segments, downsampling_ratio_mode)
 >***channels_***, list of integers from 0 - 3, representing channels A - D, respectively,
@@ -202,7 +208,14 @@ These wil not be referenced again for the sake of simplicity
 >***buffersMax***, list of lists, returned by *buffer_stream_config()*. Acts as a temporary storage space used by *data_streaming()* to transfer data to *buffersComplete* \
 >***buffersMin***, list of lists, returned by *buffer_stream_config()*. Acts as a temporary storage space used by *data_streaming()* to transfer data to *buffersComplete* \
 >***sizeOfOneBuffer***, arbitrary integer representing the number of samples per buffer \
->***sampleUnits***, integer representing the time units of *sampleInterval*, with values, from 0 - 5, representing fs, ps, ns, μs, ms, s respectively \
+>***sampleUnits***, integer representing the time units of *sampleInterval*, with values, from 0 - 5, representing fs, ps, ns, μs, ms, s respectively such that,
+> - Femptoseconds -> 0
+> - Picoseconds -> 1
+> - Nanoseconds -> 2
+> - Microseconds -> 3
+> - Milliseconds -> 4
+> - Seconds -> 5
+> 
 >***preTriggerSamples***, arbitrary integer representing the number of samples to take before the trigger event time \
 >***postTriggerSamples***, arbitrary integer representing the number of samples to take after the trigger event time \
 >***downsampling_ratio_mode***, integer representing the downsapling ratio mode such that,
