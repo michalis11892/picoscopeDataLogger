@@ -1210,8 +1210,10 @@ class Ui_MainWindow(object):
         self.cThresholdModeComboBox.setCurrentText(f.readline().replace('\n', ''))
         self.dThresholdModeComboBox.setCurrentText(f.readline().replace('\n', ''))
         self.extThresholdModeComboBox.setCurrentText(f.readline().replace('\n', ''))
+        for i in range(len(conditionList['aStateComboBox'])):
+            self.deleteCondition()
         conditionNum = int(f.readline().replace('\n', ''))
-        for i in range(conditionNum-1):
+        for i in range(conditionNum):
             self.newCondition()
         for name in conditionList:
             if name in ['conditionTab', 'extConditionLabel', 'aConditionLabel', 'bConditionLabel', 'cConditionLabel', 'dConditionLabel', 'stateLabel']:
@@ -1222,6 +1224,8 @@ class Ui_MainWindow(object):
         self.presetComboBox.setCurrentText(str(os.path.basename(presetFilePath[0])).split('.')[0])
 
     def loadDetectedPreset(self):
+        if self.presetComboBox.currentText() == 'Manual':
+            return 0
         presetFilePath = ['./presets/'+str(self.presetComboBox.currentText())+'.txt']
         f = open(presetFilePath[0], 'r')
         self.driverComboBox.setCurrentText(f.readline().replace('\n', ''))
@@ -1287,8 +1291,10 @@ class Ui_MainWindow(object):
         self.cThresholdModeComboBox.setCurrentText(f.readline().replace('\n', ''))
         self.dThresholdModeComboBox.setCurrentText(f.readline().replace('\n', ''))
         self.extThresholdModeComboBox.setCurrentText(f.readline().replace('\n', ''))
+        for i in range(len(conditionList['aStateComboBox'])):
+            self.deleteCondition()
         conditionNum = int(f.readline().replace('\n', ''))
-        for i in range(conditionNum-1):
+        for i in range(conditionNum):
             self.newCondition()
         for name in conditionList:
             if name in ['conditionTab', 'extConditionLabel', 'aConditionLabel', 'bConditionLabel', 'cConditionLabel', 'dConditionLabel', 'stateLabel']:
