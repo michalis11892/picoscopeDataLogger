@@ -795,7 +795,7 @@
       <number>999999999</number>
      </property>
     </widget>
-    <widget class="QComboBox" name="comboBox">
+    <widget class="QComboBox" name="timeUnitsComboBox">
      <property name="geometry">
       <rect>
        <x>210</x>
@@ -2174,7 +2174,7 @@
      <string>Run</string>
     </property>
    </widget>
-   <widget class="QLabel" name="label">
+   <widget class="QLabel" name="runsLabel">
     <property name="geometry">
      <rect>
       <x>130</x>
@@ -2187,7 +2187,7 @@
      <string>Runs</string>
     </property>
    </widget>
-   <widget class="QSpinBox" name="spinBox">
+   <widget class="QSpinBox" name="runsSpinBox">
     <property name="geometry">
      <rect>
       <x>170</x>
@@ -2195,6 +2195,9 @@
       <width>42</width>
       <height>16</height>
      </rect>
+    </property>
+    <property name="minimum">
+     <number>1</number>
     </property>
    </widget>
    <widget class="QTabWidget" name="tabWidget">
@@ -2244,7 +2247,6 @@
     <property name="title">
      <string>Presets</string>
     </property>
-    <addaction name="actionSave_as_a_Preset"/>
     <addaction name="actionSave_Preset"/>
     <addaction name="actionLoad_Preset"/>
    </widget>
