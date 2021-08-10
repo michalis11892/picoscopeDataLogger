@@ -2,8 +2,15 @@
 from picosdk.discover import find_unit
 import fileinput
 from os import listdir
+import os
 
 def driver_replacement(driver = None):
+    dir = os.path.join('.', 'driver.log')
+    if not os.path.exists(dir):
+        f = open('driver.log', 'w')
+        f.write('ps2000a')
+        f.close()
+
     f = open('driver.log', 'r')
     to_replace = f.readline().replace('\n', '') #Current default present for this is ps2000a
     f.close()
@@ -25,3 +32,20 @@ def driver_replacement(driver = None):
     f = open('driver.log', 'w')
     f.write(driver)
     f.close()
+
+def driver_autodetect():
+    dir = os.path.join('.', 'driver.log')
+    if not os.path.exists(dir):
+        f = open('driver.log', 'w')
+        f.write('ps2000a')
+        f.close()
+
+    f = open('driver.log', 'r')
+    to_replace = f.readline().replace('\n', '') #Current default present for this is ps2000a
+    f.close()
+
+    scope = find_unit() #Will contain infomration on all connected picoscopes
+    driver = str(scope.info.driver).split(' ')[1]
+    scope.close()
+
+    return driver
