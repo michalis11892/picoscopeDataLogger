@@ -913,6 +913,7 @@ class Ui_MainWindow(object):
             self.outFileNameLineEdit.setEnabled(False)
 
     def driverChannelCheck(self):
+        driver_replacement(self.driverComboBox.currentText())
         if str(self.driverComboBox.currentText()) == 'ps2000a':
             self.cCheck.setEnabled(False)
             self.cCheck.setChecked(False)
@@ -1034,11 +1035,39 @@ class Ui_MainWindow(object):
 
     def triggerTypeCheck(self):
         if str(self.triggerTypeComboBox.currentText()) == 'Simple':
-            self.aTriggerCheck.setChecked(False)
-            self.bTriggerCheck.setChecked(False)
-            self.cTriggerCheck.setChecked(False)
-            self.dTriggerCheck.setChecked(False)
-            self.extTriggerCheck.setChecked(False)
+            self.simpleTriggerCheck()
+            checkCount = 0
+            if bool(int(self.aTriggerCheck.checkState())) and str(self.driverComboBox.currentText()) == 'ps2000a':
+                checkCount += 1
+                self.aTriggerCheck.setEnabled(True)
+                self.aUpperThresholdSpinBox.setEnabled(True)
+                self.aDirectionComboBox.setEnabled(True)
+            if bool(int(self.bTriggerCheck.checkState())) and str(self.driverComboBox.currentText()) == 'ps2000a':
+                checkCount += 1
+                self.bTriggerCheck.setEnabled(True)
+                self.bUpperThresholdSpinBox.setEnabled(True)
+                self.bDirectionComboBox.setEnabled(True)
+            if bool(int(self.cTriggerCheck.checkState())) and str(self.driverComboBox.currentText()) == 'ps3000a':
+                checkCount += 1
+                self.cTriggerCheck.setEnabled(True)
+                self.cUpperThresholdSpinBox.setEnabled(True)
+                self.cDirectionComboBox.setEnabled(True)
+            if bool(int(self.dTriggerCheck.checkState())) and str(self.driverComboBox.currentText()) == 'ps3000a':
+                checkCount += 1
+                self.dTriggerCheck.setEnabled(True)
+                self.dUpperThresholdSpinBox.setEnabled(True)
+                self.dDirectionComboBox.setEnabled(True)
+            if bool(int(self.extTriggerCheck.checkState())) and str(self.driverComboBox.currentText()) == 'ps3000a':
+                checkCount += 1
+                self.extTriggerCheck.setEnabled(True)
+                self.extUpperThresholdSpinBox.setEnabled(True)
+                self.extDirectionComboBox.setEnabled(True)
+            if checkCount > 1:
+                self.aTriggerCheck.setChecked(False)
+                self.bTriggerCheck.setChecked(False)
+                self.cTriggerCheck.setChecked(False)
+                self.dTriggerCheck.setChecked(False)
+                self.extTriggerCheck.setChecked(False)
             self.aUpperHysteresisSpinBox.setEnabled(False)
             self.bUpperHysteresisSpinBox.setEnabled(False)
             self.cUpperHysteresisSpinBox.setEnabled(False)
@@ -1208,10 +1237,13 @@ class Ui_MainWindow(object):
             self.conditionsTabWidget.setTabText(self.conditionsTabWidget.indexOf(conditionList['conditionTab'][i]), _translate("MainWindow", str(i+1)))
 
     def savePreset(self):
+        _translate = QtCore.QCoreApplication.translate
         if self.presetComboBox.currentText() == 'Manual':
             presetFileName, ok = QtWidgets.QInputDialog().getText(MainWindow, 'New Preset', 'New Preset File Name:', QtWidgets.QLineEdit.Normal, QtCore.QDir().home().dirName())
         else:
             presetFileName = self.presetComboBox.currentText()
+        if presetFileName == '':
+            return 0
         f = open('presets/'+presetFileName+'.txt', 'w')
         f.write(self.driverComboBox.currentText()+'\n')
         f.write(str(self.outFileCheckBox.checkState())+'\n')
@@ -1283,6 +1315,8 @@ class Ui_MainWindow(object):
             for element in conditionList[name]:
                 f.write(element.currentText()+'\n')
         f.close()
+        self.presetComboBox.addItem(presetFileName)
+        self.presetComboBox.setCurrentText(presetFileName)
 
     def loadPreset(self):
         presetFilePath = QtWidgets.QFileDialog.getOpenFileName(MainWindow, 'Find Preset File', '.')
@@ -1630,7 +1664,7 @@ class Ui_MainWindow(object):
             buffersMax, buffersMin = buffer_block_config(chandle, status, channels_, totalSamples, segments, 0) #Setup buffer and segments
             buff = []
             if bool(int(self.outFileCheckBox.checkState())):
-                clear_file(self.outFileCheckBox.currentText())
+                clear_file(self.outFileNameLineEdit.text())
             for i in range(int(self.runsSpinBox.text())):
                 data_block(chandle, status, preTriggerSamples, postTriggerSamples, timebase, 0, 0) #Get data
                 buff.append(copy.deepcopy(buffersMax))
@@ -1646,7 +1680,7 @@ class Ui_MainWindow(object):
             buffersMax, buffersMin = buffer_block_config(chandle, status, channels_, totalSamples, segments, 0) #Setup buffer and segments
             buff = []
             if bool(int(self.outFileCheckBox.checkState())):
-                clear_file(self.outFileCheckBox.currentText())
+                clear_file(self.outFileNameLineEdit.text())
             for i in range(int(self.runsSpinBox.text())):
                 data_rapid_block(chandle, status, preTriggerSamples, postTriggerSamples, timebase, segments, captures, 0, 0) #Get data
                 buff.append(copy.deepcopy(buffersMax))
@@ -1664,7 +1698,7 @@ class Ui_MainWindow(object):
             buffersComplete, buffersMax, buffersMin = buffer_stream_config(chandle, status, channels_, totalSamples, sizeOfOneBuffer, segments, 0) #Setup buffers
             buff = []
             if bool(int(self.outFileCheckBox.checkState())):
-                clear_file(self.outFileCheckBox.currentText())
+                clear_file(self.outFileNameLineEdit.text())
             for i in range(int(self.runsSpinBox.text())):
                 data_streaming(chandle, status, sampleInterval, 0, buffersComplete, buffersMax, sizeOfOneBuffer, sampleUnits, preTriggerSamples, postTriggerSamples, 0, 1) #Get data
                 buff.append(copy.deepcopy(buffersComplete))
@@ -1691,7 +1725,7 @@ class Ui_MainWindow(object):
                 runList['stackedWidget'][-1].addWidget(runList['captureTab'][-1][i])
             self.pageChangeCheck()
             if bool(int(self.outFileCheckBox.checkState())): #True for file writing
-                run_to_file(time_, run, channels_, segments, indx, self.outFileCheckBox.currentText())
+                run_to_file(time_, run, channels_, segments, indx, self.outFileNameLineEdit.text())
 
         stop_scope([chandle, status])
 

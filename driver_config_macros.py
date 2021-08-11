@@ -24,6 +24,8 @@ def driver_replacement(driver = None):
 
     ls = listdir()
     for file in ls:
+        if file == 'gui.py':
+            continue
         if file[-3:] == '.py':
             with fileinput.FileInput(file, inplace=True, backup='.bak') as file:
                 for line in file:
