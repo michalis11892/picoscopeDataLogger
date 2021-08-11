@@ -3,4 +3,5 @@
 *0.py
 *.txt
 *.ui
+*.bak
 __pycache__

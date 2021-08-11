@@ -10,7 +10,7 @@
 import os
 import sys
 import copy
-sys.path.append('../') #Only for development purposes
+sys.path.append(os.getcwd()+'\..') #Only for development purposes
 from driver_config_macros import *
 from data_capture_macros import *
 from signal_generator_macros import *
