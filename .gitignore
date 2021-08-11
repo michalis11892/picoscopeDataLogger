@@ -2,4 +2,5 @@
 *.out*
 *0.py
 *.txt
+*.ui
 __pycache__
