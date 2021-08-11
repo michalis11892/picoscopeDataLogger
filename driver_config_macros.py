@@ -24,12 +24,12 @@ def driver_replacement(driver = None):
 
     ls = listdir()
     for file in ls:
-        if file == 'gui.py':
+        if file in ['gui.py', 'driver_config_macros.py']:
             continue
         if file[-3:] == '.py':
             with fileinput.FileInput(file, inplace=True, backup='.bak') as file:
                 for line in file:
-                    print(line.replace(to_replace, driver), end='')
+                    print(line.replace(to_replace, driver).replace(to_replace.upper(), driver.upper()), end='')
 
     f = open('driver.log', 'w')
     f.write(driver)
