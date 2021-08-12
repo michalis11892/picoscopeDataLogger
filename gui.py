@@ -29,6 +29,7 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(801, 580)
+        MainWindow.setMinimumSize(QtCore.QSize(801, 580))
         MainWindow.setMaximumSize(QtCore.QSize(801, 580))
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap(".\\icon.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
@@ -39,19 +40,16 @@ class Ui_MainWindow(object):
         self.driverLabel = QtWidgets.QLabel(self.centralwidget)
         self.driverLabel.setGeometry(QtCore.QRect(20, 10, 51, 21))
         self.driverLabel.setObjectName("driverLabel")
-        self.autoDetectButton = QtWidgets.QPushButton(self.centralwidget)
-        self.autoDetectButton.setGeometry(QtCore.QRect(30, 40, 81, 23))
-        self.autoDetectButton.setObjectName("autoDetectButton")
         self.presetComboBox = QtWidgets.QComboBox(self.centralwidget)
-        self.presetComboBox.setGeometry(QtCore.QRect(170, 40, 91, 22))
+        self.presetComboBox.setGeometry(QtCore.QRect(60, 40, 91, 22))
         self.presetComboBox.setEditable(False)
         self.presetComboBox.setObjectName("presetComboBox")
         self.presetComboBox.addItem("")
         self.presetLabel = QtWidgets.QLabel(self.centralwidget)
-        self.presetLabel.setGeometry(QtCore.QRect(130, 40, 41, 21))
+        self.presetLabel.setGeometry(QtCore.QRect(20, 40, 41, 21))
         self.presetLabel.setObjectName("presetLabel")
         self.channelBox = QtWidgets.QGroupBox(self.centralwidget)
-        self.channelBox.setGeometry(QtCore.QRect(270, 0, 221, 121))
+        self.channelBox.setGeometry(QtCore.QRect(210, 0, 281, 121))
         self.channelBox.setObjectName("channelBox")
         self.aLabel = QtWidgets.QLabel(self.channelBox)
         self.aLabel.setGeometry(QtCore.QRect(10, 30, 21, 16))
@@ -163,6 +161,29 @@ class Ui_MainWindow(object):
         self.offsetLabel = QtWidgets.QLabel(self.channelBox)
         self.offsetLabel.setGeometry(QtCore.QRect(160, 10, 47, 13))
         self.offsetLabel.setObjectName("offsetLabel")
+        self.couplingLabel = QtWidgets.QLabel(self.channelBox)
+        self.couplingLabel.setGeometry(QtCore.QRect(230, 10, 47, 13))
+        self.couplingLabel.setObjectName("couplingLabel")
+        self.aCouplingComboBox = QtWidgets.QComboBox(self.channelBox)
+        self.aCouplingComboBox.setGeometry(QtCore.QRect(230, 30, 41, 16))
+        self.aCouplingComboBox.setObjectName("aCouplingComboBox")
+        self.aCouplingComboBox.addItem("")
+        self.aCouplingComboBox.addItem("")
+        self.bCouplingComboBox = QtWidgets.QComboBox(self.channelBox)
+        self.bCouplingComboBox.setGeometry(QtCore.QRect(230, 50, 41, 16))
+        self.bCouplingComboBox.setObjectName("bCouplingComboBox")
+        self.bCouplingComboBox.addItem("")
+        self.bCouplingComboBox.addItem("")
+        self.cCouplingComboBox = QtWidgets.QComboBox(self.channelBox)
+        self.cCouplingComboBox.setGeometry(QtCore.QRect(230, 70, 41, 16))
+        self.cCouplingComboBox.setObjectName("cCouplingComboBox")
+        self.cCouplingComboBox.addItem("")
+        self.cCouplingComboBox.addItem("")
+        self.dCouplingComboBox = QtWidgets.QComboBox(self.channelBox)
+        self.dCouplingComboBox.setGeometry(QtCore.QRect(230, 90, 41, 16))
+        self.dCouplingComboBox.setObjectName("dCouplingComboBox")
+        self.dCouplingComboBox.addItem("")
+        self.dCouplingComboBox.addItem("")
         self.captureBox = QtWidgets.QGroupBox(self.centralwidget)
         self.captureBox.setGeometry(QtCore.QRect(500, 0, 291, 121))
         self.captureBox.setObjectName("captureBox")
@@ -240,12 +261,10 @@ class Ui_MainWindow(object):
         self.samplesPerBufferSpinBox.setGeometry(QtCore.QRect(231, 90, 51, 16))
         self.samplesPerBufferSpinBox.setMaximum(999999)
         self.samplesPerBufferSpinBox.setObjectName("samplesPerBufferSpinBox")
-        self.driverComboBox = QtWidgets.QComboBox(self.centralwidget)
-        self.driverComboBox.setGeometry(QtCore.QRect(60, 10, 71, 22))
-        self.driverComboBox.setEditable(True)
-        self.driverComboBox.setObjectName("driverComboBox")
-        self.driverComboBox.addItem("")
-        self.driverComboBox.addItem("")
+        self.driverLineEdit = QtWidgets.QLineEdit(self.centralwidget)
+        self.driverLineEdit.setGeometry(QtCore.QRect(60, 10, 71, 22))
+        self.driverLineEdit.setReadOnly(True)
+        self.driverLineEdit.setObjectName("driverLineEdit")
         self.outFileCheckBox = QtWidgets.QCheckBox(self.centralwidget)
         self.outFileCheckBox.setGeometry(QtCore.QRect(30, 80, 81, 17))
         self.outFileCheckBox.setObjectName("outFileCheckBox")
@@ -524,10 +543,10 @@ class Ui_MainWindow(object):
         self.runButton.setGeometry(QtCore.QRect(720, 530, 75, 23))
         self.runButton.setObjectName("runButton")
         self.runsLabel = QtWidgets.QLabel(self.centralwidget)
-        self.runsLabel.setGeometry(QtCore.QRect(130, 70, 47, 16))
+        self.runsLabel.setGeometry(QtCore.QRect(120, 70, 47, 16))
         self.runsLabel.setObjectName("runsLabel")
         self.runsSpinBox = QtWidgets.QSpinBox(self.centralwidget)
-        self.runsSpinBox.setGeometry(QtCore.QRect(170, 70, 42, 16))
+        self.runsSpinBox.setGeometry(QtCore.QRect(160, 70, 42, 16))
         self.runsSpinBox.setObjectName("runsSpinBox")
         self.tabWidget = QtWidgets.QTabWidget(self.centralwidget)
         self.tabWidget.setGeometry(QtCore.QRect(20, 130, 471, 391))
@@ -566,14 +585,12 @@ class Ui_MainWindow(object):
         self.retranslateUi(MainWindow)
         self.conditionsTabWidget.setCurrentIndex(0)
         self.tabWidget.setCurrentIndex(0)
-        #self.stackedWidget.setCurrentIndex(1)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "Logger"))
         self.driverLabel.setText(_translate("MainWindow", "Driver"))
-        self.autoDetectButton.setText(_translate("MainWindow", "Autodetect"))
         self.presetComboBox.setItemText(0, _translate("MainWindow", "Manual"))
         self.presetLabel.setText(_translate("MainWindow", "Preset"))
         self.channelBox.setTitle(_translate("MainWindow", "Channels"))
@@ -629,8 +646,17 @@ class Ui_MainWindow(object):
         self.dRangeComboBox.setItemText(9, _translate("MainWindow", "10 V"))
         self.dRangeComboBox.setItemText(10, _translate("MainWindow", "20 V"))
         self.dRangeComboBox.setItemText(11, _translate("MainWindow", "50 V"))
+        self.aCouplingComboBox.setItemText(0, _translate("MainWindow", "AC"))
+        self.aCouplingComboBox.setItemText(1, _translate("MainWindow", "DC"))
+        self.bCouplingComboBox.setItemText(0, _translate("MainWindow", "AC"))
+        self.bCouplingComboBox.setItemText(1, _translate("MainWindow", "DC"))
+        self.cCouplingComboBox.setItemText(0, _translate("MainWindow", "AC"))
+        self.cCouplingComboBox.setItemText(1, _translate("MainWindow", "DC"))
+        self.dCouplingComboBox.setItemText(0, _translate("MainWindow", "AC"))
+        self.dCouplingComboBox.setItemText(1, _translate("MainWindow", "DC"))
         self.rangeLabel.setText(_translate("MainWindow", "Range"))
         self.offsetLabel.setText(_translate("MainWindow", "Offset"))
+        self.couplingLabel.setText(_translate("MainWindow", "Coupling"))
         self.captureBox.setTitle(_translate("MainWindow", "Capture"))
         self.modeComboBox.setItemText(0, _translate("MainWindow", "Block"))
         self.modeComboBox.setItemText(1, _translate("MainWindow", "Rapid Block"))
@@ -650,8 +676,6 @@ class Ui_MainWindow(object):
         self.timeUnitsComboBox.setItemText(4, _translate("MainWindow", "ms"))
         self.timeUnitsComboBox.setItemText(5, _translate("MainWindow", "s"))
         self.samplesPerBufferLabel.setText(_translate("MainWindow", "Samples per Buffer"))
-        self.driverComboBox.setItemText(0, _translate("MainWindow", "ps2000a"))
-        self.driverComboBox.setItemText(1, _translate("MainWindow", "ps3000a"))
         self.outFileCheckBox.setText(_translate("MainWindow", "File Output"))
         self.triggerBox.setTitle(_translate("MainWindow", "Trigger"))
         self.triggerTypeLabel.setText(_translate("MainWindow", "Type"))
@@ -755,6 +779,8 @@ class Ui_MainWindow(object):
         self.dRangeComboBox.setEnabled(False)
         self.cOffsetSpinBox.setEnabled(False)
         self.dOffsetSpinBox.setEnabled(False)
+        self.cCouplingComboBox.setEnabled(False)
+        self.dCouplingComboBox.setEnabled(False)
         self.cTriggerCheck.setEnabled(False)
         self.dTriggerCheck.setEnabled(False)
         self.extTriggerCheck.setEnabled(False)
@@ -815,14 +841,6 @@ class Ui_MainWindow(object):
         self.bRangeComboBox.setCurrentIndex(1)
         self.timeUnitsComboBox.setCurrentText('ns')
 
-        dir = os.path.join('.', 'presets')
-        if not os.path.exists(dir):
-            os.mkdir(dir)
-        presetList = os.listdir('./presets')
-        for i in range(len(presetList)):
-            if presetList[i].split('.')[1] =='prst':
-                self.presetComboBox.addItem(presetList[i].split('.')[0])
-
         self.runsSpinBox.setMinimum(1)
         self.timebaseSpinBox.setMinimum(1)
         self.segmentsSpinBox.setMinimum(1)
@@ -859,9 +877,26 @@ class Ui_MainWindow(object):
         self.previousPushButton.setText(_translate("MainWindow", "Previous"))
         self.previousPushButton.setEnabled(False)
 
+        f = open('driver.log', 'r')
+        self.driverLineEdit.setText(f.readline().replace('\n', ''))
+        f.close()
+        self.driverChannelCheck()
+
+        dir = os.path.join('.', 'presets')
+        if not os.path.exists(dir):
+            os.mkdir(dir)
+        presetList = os.listdir('./presets')
+        for i in range(len(presetList)):
+            if presetList[i].split('.')[1] =='prst':
+                f = open('./presets/'+presetList[i], 'r')
+                driver = f.readline().replace('\n', '')
+                if self.driverLineEdit.text() != driver:
+                    continue
+                f.close()
+                self.presetComboBox.addItem(presetList[i].split('.')[0])
+
         #Actions
         self.outFileCheckBox.clicked.connect(self.fileOutCheck)
-        self.driverComboBox.currentTextChanged.connect(self.driverChannelCheck)
         self.modeComboBox.currentTextChanged.connect(self.captureModeCheck)
         self.triggerTypeComboBox.currentTextChanged.connect(self.triggerTypeCheck)
         self.newConditionButton.clicked.connect(self.newCondition)
@@ -869,7 +904,6 @@ class Ui_MainWindow(object):
         self.actionSave_Preset.triggered.connect(self.savePreset)
         self.actionLoad_Preset.triggered.connect(self.loadPreset)
         self.presetComboBox.currentTextChanged.connect(self.loadDetectedPreset)
-        self.autoDetectButton.clicked.connect(self.autodetect)
         self.runButton.clicked.connect(self.run)
         self.aTriggerCheck.clicked.connect(self.simpleTriggerCheck)
         self.bTriggerCheck.clicked.connect(self.simpleTriggerCheck)
@@ -917,8 +951,8 @@ class Ui_MainWindow(object):
             self.outFileNameLineEdit.setEnabled(False)
 
     def driverChannelCheck(self):
-        driver_replacement(self.driverComboBox.currentText())
-        if str(self.driverComboBox.currentText()) == 'ps2000a':
+        driver_replacement(self.driverLineEdit.text())
+        if str(self.driverLineEdit.text()) == 'ps2000a':
             self.cCheck.setEnabled(False)
             self.cCheck.setChecked(False)
             self.dCheck.setEnabled(False)
@@ -927,6 +961,8 @@ class Ui_MainWindow(object):
             self.dRangeComboBox.setEnabled(False)
             self.cOffsetSpinBox.setEnabled(False)
             self.dOffsetSpinBox.setEnabled(False)
+            self.cCouplingComboBox.setEnabled(False)
+            self.dCouplingComboBox.setEnabled(False)
             self.aTriggerCheck.setEnabled(True)
             self.bTriggerCheck.setEnabled(True)
             self.cTriggerCheck.setEnabled(False)
@@ -965,13 +1001,15 @@ class Ui_MainWindow(object):
             self.aRangeComboBox.model().item(11).setEnabled(False)
             self.bRangeComboBox.model().item(0).setEnabled(False)
             self.bRangeComboBox.model().item(11).setEnabled(False)
-        elif str(self.driverComboBox.currentText()) == 'ps3000a':
+        elif str(self.driverLineEdit.text()) == 'ps3000a':
             self.cCheck.setEnabled(True)
             self.dCheck.setEnabled(True)
             self.cRangeComboBox.setEnabled(True)
             self.dRangeComboBox.setEnabled(True)
             self.cOffsetSpinBox.setEnabled(True)
             self.dOffsetSpinBox.setEnabled(True)
+            self.cCouplingComboBox.setEnabled(True)
+            self.dCouplingComboBox.setEnabled(True)
             self.aRangeComboBox.model().item(0).setEnabled(True)
             self.aRangeComboBox.model().item(11).setEnabled(True)
             self.bRangeComboBox.model().item(0).setEnabled(True)
@@ -1041,27 +1079,27 @@ class Ui_MainWindow(object):
         if str(self.triggerTypeComboBox.currentText()) == 'Simple':
             self.simpleTriggerCheck()
             checkCount = 0
-            if bool(int(self.aTriggerCheck.checkState())) and str(self.driverComboBox.currentText()) == 'ps2000a':
+            if bool(int(self.aTriggerCheck.checkState())) and str(self.driverLineEdit.text()) == 'ps2000a':
                 checkCount += 1
                 self.aTriggerCheck.setEnabled(True)
                 self.aUpperThresholdSpinBox.setEnabled(True)
                 self.aDirectionComboBox.setEnabled(True)
-            if bool(int(self.bTriggerCheck.checkState())) and str(self.driverComboBox.currentText()) == 'ps2000a':
+            if bool(int(self.bTriggerCheck.checkState())) and str(self.driverLineEdit.text()) == 'ps2000a':
                 checkCount += 1
                 self.bTriggerCheck.setEnabled(True)
                 self.bUpperThresholdSpinBox.setEnabled(True)
                 self.bDirectionComboBox.setEnabled(True)
-            if bool(int(self.cTriggerCheck.checkState())) and str(self.driverComboBox.currentText()) == 'ps3000a':
+            if bool(int(self.cTriggerCheck.checkState())) and str(self.driverLineEdit.text()) == 'ps3000a':
                 checkCount += 1
                 self.cTriggerCheck.setEnabled(True)
                 self.cUpperThresholdSpinBox.setEnabled(True)
                 self.cDirectionComboBox.setEnabled(True)
-            if bool(int(self.dTriggerCheck.checkState())) and str(self.driverComboBox.currentText()) == 'ps3000a':
+            if bool(int(self.dTriggerCheck.checkState())) and str(self.driverLineEdit.text()) == 'ps3000a':
                 checkCount += 1
                 self.dTriggerCheck.setEnabled(True)
                 self.dUpperThresholdSpinBox.setEnabled(True)
                 self.dDirectionComboBox.setEnabled(True)
-            if bool(int(self.extTriggerCheck.checkState())) and str(self.driverComboBox.currentText()) == 'ps3000a':
+            if bool(int(self.extTriggerCheck.checkState())) and str(self.driverLineEdit.text()) == 'ps3000a':
                 checkCount += 1
                 self.extTriggerCheck.setEnabled(True)
                 self.extUpperThresholdSpinBox.setEnabled(True)
@@ -1120,7 +1158,7 @@ class Ui_MainWindow(object):
                 conditionList['bStateComboBox'][i].setEnabled(True)
             self.newConditionButton.setEnabled(True)
             self.deleteConditionButton.setEnabled(True)
-            if str(self.driverComboBox.currentText()) == 'ps3000a':
+            if str(self.driverLineEdit.text()) == 'ps3000a':
                 self.cTriggerCheck.setEnabled(True)
                 self.dTriggerCheck.setEnabled(True)
                 self.extTriggerCheck.setEnabled(True)
@@ -1249,7 +1287,7 @@ class Ui_MainWindow(object):
         if presetFileName == '':
             return 0
         f = open('presets/'+presetFileName+'.prst', 'w')
-        f.write(self.driverComboBox.currentText()+'\n')
+        f.write(self.driverLineEdit.text()+'\n')
         f.write(str(self.outFileCheckBox.checkState())+'\n')
         f.write(self.outFileNameLineEdit.text()+'\n')
         f.write(self.runsSpinBox.text()+'\n')
@@ -1327,7 +1365,17 @@ class Ui_MainWindow(object):
         if presetFilePath[0] == '':
             return 0
         f = open(presetFilePath[0], 'r')
-        self.driverComboBox.setCurrentText(f.readline().replace('\n', ''))
+        driver = f.readline().replace('\n', '')
+        if self.driverLineEdit.text() != driver:
+            self.error = QtWidgets.QMessageBox()
+            self.error.setWindowTitle('Error')
+            icon = QtGui.QIcon()
+            icon.addPixmap(QtGui.QPixmap(".\\icon.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+            self.error.setWindowIcon(icon)
+            self.error.setText('Incompatible Driver Preset')
+            self.error.setIcon(QtWidgets.QMessageBox.Information)
+            ok = self.error.exec_()
+            return 0
         self.outFileCheckBox.setCheckState(int(f.readline().replace('\n', '')))
         self.outFileNameLineEdit.setText(f.readline().replace('\n', ''))
         self.runsSpinBox.setValue(int(float(f.readline().replace('\n', ''))))
@@ -1408,7 +1456,7 @@ class Ui_MainWindow(object):
             return 0
         presetFilePath = ['./presets/'+str(self.presetComboBox.currentText())+'.prst']
         f = open(presetFilePath[0], 'r')
-        self.driverComboBox.setCurrentText(f.readline().replace('\n', ''))
+        self.driverLineEdit.setText(f.readline().replace('\n', ''))
         self.outFileCheckBox.setCheckState(int(f.readline().replace('\n', '')))
         self.outFileNameLineEdit.setText(f.readline().replace('\n', ''))
         self.runsSpinBox.setValue(int(float(f.readline().replace('\n', ''))))
@@ -1484,7 +1532,7 @@ class Ui_MainWindow(object):
         f.close()
 
     def autodetect(self):
-        self.driverComboBox.setCurrentText(driver_autodetect())
+        self.driverLineEdit.setText(driver_autodetect())
 
     def simpleTriggerCheck(self):
         if self.triggerTypeComboBox.currentText() == 'Simple':
@@ -1554,7 +1602,7 @@ class Ui_MainWindow(object):
                 self.cDirectionComboBox.setEnabled(False)
                 self.dDirectionComboBox.setEnabled(False)
             else:
-                if self.driverComboBox.currentText() == 'ps2000a':
+                if self.driverLineEdit.text() == 'ps2000a':
                     self.aTriggerCheck.setEnabled(True)
                     self.bTriggerCheck.setEnabled(True)
                     self.aUpperThresholdSpinBox.setEnabled(True)
@@ -1594,28 +1642,30 @@ class Ui_MainWindow(object):
         offsets_ = []
         if bool(int(self.aCheck.checkState())):
             channels_.append(0)
-            couplings_.append(0)
+            couplings_.append(self.aCouplingComboBox.currentIndex())
             cranges_.append(self.aRangeComboBox.currentIndex())
             offsets_.append(float(self.aOffsetSpinBox.text()))
         if bool(int(self.bCheck.checkState())):
             channels_.append(1)
-            couplings_.append(0)
+            couplings_.append(self.bCouplingComboBox.currentIndex())
             cranges_.append(self.bRangeComboBox.currentIndex())
             offsets_.append(float(self.bOffsetSpinBox.text()))
         if bool(int(self.cCheck.checkState())):
             channels_.append(2)
-            couplings_.append(0)
+            couplings_.append(self.cCouplingComboBox.currentIndex())
             cranges_.append(self.cRangeComboBox.currentIndex())
             offsets_.append(float(self.cOffsetSpinBox.text()))
         if bool(int(self.dCheck.checkState())):
             channels_.append(3)
-            couplings_.append(0)
+            couplings_.append(self.dCouplingComboBox.currentIndex())
             cranges_.append(self.dRangeComboBox.currentIndex())
             offsets_.append(float(self.dOffsetSpinBox.text()))
         channel_config(chandle, status, 1, channels_, couplings_, cranges_, offsets_)
 
         #Trigger Configuration
         trigChannel = 0 #Default Value
+        trigAdcCounts = 0
+        trigDirection = 0
         if self.triggerTypeComboBox.currentText() == 'Simple':
             if bool(int(self.aTriggerCheck.checkState())):
                 trigChannel = 0
