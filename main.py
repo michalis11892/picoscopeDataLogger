@@ -11,6 +11,7 @@ from signal_generator_macros import *
 from power_operation_macros import *
 from capture_config_macros import *
 from trig_config_macros import *
+from trig_pwq_macros import *
 from data_processing_macros import *
 
 '''Autodetect driver version for single connected picoscope

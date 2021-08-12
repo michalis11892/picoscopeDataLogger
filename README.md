@@ -70,6 +70,8 @@ Some universal parameters that appear in almost every macro are,
 >***status***, a dictionary that stores all output codes of all run operations to the scope. *Useful for debugging*
 
 These wil not be referenced again for the sake of simplicity
+
+*NOTE: The following Appendix entries are specified with the ps2000a driver in mind, other driver implementations of thesde methods differ slightly in trig_pwq_config, for further details please see the comments in trig_pwq_macros.py*
 ### Driver Configuration Macros:
 ***
 **driver_replacement**(driver = None)
@@ -215,7 +217,7 @@ These wil not be referenced again for the sake of simplicity
 > - Microseconds -> 3
 > - Milliseconds -> 4
 > - Seconds -> 5
-> 
+>
 >***preTriggerSamples***, arbitrary integer representing the number of samples to take before the trigger event time \
 >***postTriggerSamples***, arbitrary integer representing the number of samples to take after the trigger event time \
 >***downsampling_ratio_mode***, integer representing the downsapling ratio mode such that,
@@ -385,6 +387,7 @@ These wil not be referenced again for the sake of simplicity
 >  - Pulse width greater than lower -> 2
 >  - Pulse width between lower and upper -> 3
 >  - Pulse width not between lower and upper -> 4
+>
 
 **trig_logic_config**(chandle, status, trig_conditions, trig_directions, trig_properties, trig_auto)
 >***trig_conditions***, list of lists, where each list contains the conditions for a PS2000A_TRIGGER_CONDITIONS structure, which are effectively ANDed together to return one logical result per structure, and then all structure results are ORed together to return the final state of the complex trigger. Each structure takes 7 conditions which have a specific position in a sublist,
