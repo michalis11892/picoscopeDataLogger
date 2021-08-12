@@ -21,9 +21,8 @@ runList = {'runTab': [], 'stackedWidget': [], 'captureTab': []}
 
 class Canvas(FigureCanvasQTAgg):
     def __init__(self, parent=None, width=4.61, height=3.61, dpi=100):
-        fig = Figure(figsize=(width, height), dpi=dpi)
-        self.axes = fig.add_subplot(111)
-        super(Canvas, self).__init__(fig)
+        fig, self.axes = plt.subplots(figsize=(width, height), dpi=dpi)
+        super().__init__(fig)
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -1774,8 +1773,7 @@ class Ui_MainWindow(object):
                 for j in range(len(channels_)):
                     run_channel_capture = run[j][i]
                     runList['captureTab'][-1][-1].axes.plot(time_, run_channel_capture)
-                '''sc.xlabel('Time (ns)')
-                sc.ylabel('Voltage (mV)')'''
+                    runList['captureTab'][-1][-1].axes.set(xlabel = 'Time ('+self.timeUnitsComboBox.currentText()+')', ylabel = 'Voltage (mV)', title = 'Capture '+str(i+1))
                 runList['stackedWidget'][-1].addWidget(runList['captureTab'][-1][i])
             self.pageChangeCheck()
             if bool(int(self.outFileCheckBox.checkState())): #True for file writing
