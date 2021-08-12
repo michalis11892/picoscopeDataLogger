@@ -24,7 +24,7 @@ def driver_replacement(driver = None):
 
     ls = listdir()
     for file in ls:
-        if file in ['gui.py', 'driver_config_macros.py']:
+        if file in ['gui_startup.py', 'gui.py', 'driver_config_macros.py', 'trig_pwq_macros.py']:
             continue
         if file[-3:] == '.py':
             with fileinput.FileInput(file, inplace=True, backup='.bak') as file:

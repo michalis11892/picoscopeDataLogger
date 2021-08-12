@@ -1,10 +1,7 @@
 import ctypes
-import numpy as np
 import time
 from picosdk.ps2000a import ps2000a as ps
 from picosdk.functions import adc2mV, assert_pico_ok
-from trig_config_macros import trig_logic_config
-from trig_config_macros import trig_pwq_config
 
 def data_block(chandle, status, preTriggerSamples, postTriggerSamples, timebase, downsampling_ratio_mode, downsampling_ratio):
     #Run block
