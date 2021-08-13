@@ -33,15 +33,20 @@ def run_to_mV(chandle, status, run, channels_, cranges_, totalSamples, segments)
         data_mV_segmented.append(channel_temp)
     return data_mV_segmented
 
-def run_to_file(time_, run, channels_, segments, runIndx, fileName):
-    f = open(fileName, 'a')
-    f.write('--------------------------------------------------------------------=[Run '+str(runIndx+1)+']=--------------------------------------------------------------------\n')
-    for channel in range(len(run)):
-        f.write('--------------------------------------------------------------------=[Channel '+str(channels[channels_[channel]])+']=--------------------------------------------------------------------\n')
-        for segment in range(segments):
-            f.write('--------------------------------------------------------------------=[Segment '+str(segment+1)+']=--------------------------------------------------------------------\n')
-            for element in range(len(run[channel][segment])):
-                f.write(str(time_[element])+', '+str(run[channel][segment][element])+'\n')
+def run_to_file(time_, timeUnits, run, channels_, segments, runIndx, fileName):
+    f = open(fileName.split('.')[0]+'_Run-'+str(runIndx)+'.'+fileName.split('.')[1], 'w')
+    titleRow = 'Time ('+timeUnits+')'
+    for i in channels_:
+        #titleRow += ' '+channels[i]+'('+runUnits[i].replace(' ', '')+')'
+        titleRow += ' '+channels[i]+'(mV)'
+    f.write(titleRow+'\n')
+    for segment in range(segments):
+        f.write('\n')
+        for element in range(len(run[-1][segment])):
+            outLine = ''
+            for channel in range(len(run)):
+                outLine += ' '+str(run[channel][segment][element])
+            f.write(str(time_[element])+outLine+'\n')
     f.close()
 
 def clear_file(fileName):
