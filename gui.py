@@ -1777,7 +1777,7 @@ class Ui_MainWindow(object):
                 runList['stackedWidget'][-1].addWidget(runList['captureTab'][-1][i])
             self.pageChangeCheck()
             if bool(int(self.outFileCheckBox.checkState())): #True for file writing
-                run_to_file(time_, run, channels_, segments, indx, self.outFileNameLineEdit.text())
+                run_to_file(time_, self.timeUnitsComboBox.currentText(), run, channels_, segments, indx, self.outFileNameLineEdit.text())
 
         stop_scope([chandle, status])
 
