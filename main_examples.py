@@ -11,18 +11,13 @@ from signal_generator_macros import *
 from power_operation_macros import *
 from capture_config_macros import *
 from trig_config_macros import *
-from trig_pwq_macros import *
 from data_processing_macros import *
 
-'''Autodetect driver version for single connected picoscope
-from picosdk.discover import find_all_units
-scopes = find_all_units() #Will contain infomration on all connected picoscopes
-str(scopes[0].info.driver).split(' ')[1]
-'''
-
-driver_replacement()
+#driver_replacement() for the driver replacement to properly work, it is advised that it is run seprately from the main program,
+#                     so that the newly generated code is compiled afterwards
 
 channels = ['A', 'B', 'C', 'D']
+timeUnits = ['fs', 'ps', 'ns', 'μs', 'ms', 's']
 
 chandle = ctypes.c_int16()
 status = {}
@@ -42,7 +37,8 @@ postTriggerSamples = 2500
 timebase = 32
 totalSamples = preTriggerSamples+postTriggerSamples
 segments = 1
-channel_config(chandle, status, 1, channels_, [0, 0], [6, 6], [0, 0]) #Configure channels
+ranges = [6, 6]
+channel_config(chandle, status, 1, channels_, [0, 0], ranges, [0, 0]) #Configure channels
 #trig_simple_config(chandle, status, 1, 0, 1024, 2, 0, 1000) #Setup a simple trigger
 trig_logic_config(chandle, status, [[1, 2, 0, 0, 0, 0, 0, 0]], [0, 0, 0, 0, 0, 0], [[4096, 1000, 0, 0, 0, 0], [4096, 1000, 0, 0, 1, 0]], 1000)
 time_ = timebase_block_config(chandle, status, timebase, totalSamples) #Setup timebase and time axis
@@ -65,7 +61,7 @@ for indx in range(len(buff)):
         plt.ylabel('Voltage (mV)')
         plt.show()
     if True: #True for file writing
-        run_to_file(time_, run, channels_, segments, indx, 'test.out')
+        run_to_file(time_, 'ns', run, channels_, segments, indx, 'test.out')
 
 #TEST data_rapid_block() #Measured deadtime between calls ~3/160000 seconds/totalSamples (in data) [Rule of thumb]
 '''channels_ = [0, 1]
@@ -99,7 +95,7 @@ for indx in range(len(buff)):
         plt.ylabel('Voltage (mV)')
         plt.show()
     if True: #True for file writing
-        run_to_file(time_, run, channels_, segments, indx, 'test.out')'''
+        run_to_file(time_, 'ns', run, channels_, segments, indx, 'test.out')'''
 
 #TEST data_streaming()
 '''channels_ = [0, 1]
@@ -131,6 +127,6 @@ for indx in range(len(buff)):
         plt.ylabel('Voltage (mV)')
         plt.show()
     if True: #True for file writing
-        run_to_file(time_, run, channels_, segments, indx, 'test.out')'''
+        run_to_file(time_, timeUnits[sampleUnits], run, channels_, segments, indx, 'test.out')'''
 
 stop_scope([chandle, status])
