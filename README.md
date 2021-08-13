@@ -10,7 +10,11 @@ And, optionally, for the examples in main_examples.py
 - matplotlib
 
 Users wishing to use the GUI interface should also definitely install,
+<<<<<<< HEAD
 - PyQt5
+=======
+- Qt5
+>>>>>>> eb5f1edc8ac14a5544d34fb818912770438dee2f
 - matplotlib
 
 Users should also make sure that they have the correct SDK installed for their respective PicoScope.
