@@ -24,12 +24,25 @@ def driver_replacement(driver = None):
 
     ls = listdir()
     for file in ls:
-        if file in ['gui_startup.py', 'gui.py', 'driver_config_macros.py', 'trig_pwq_macros.py']:
+        if file in ['gui_startup.py', 'gui.py', 'driver_config_macros.py']:
             continue
         if file[-3:] == '.py':
-            with fileinput.FileInput(file, inplace=True, backup='.bak') as file:
-                for line in file:
-                    print(line.replace(to_replace, driver).replace(to_replace.upper(), driver.upper()), end='')
+            if driver != 'ps2000a':
+                with fileinput.FileInput(file, inplace=True, backup='.bak') as file:
+                    for line in file:
+                        trigCond_toReplace = '_TRIGGER_CONDITIONS(condition[0], condition[1], condition[2], condition[3], condition[4], condition[5], condition[6], condition[7])'
+                        trigCond_new = '_TRIGGER_CONDITIONS(condition[0], condition[1], condition[2], condition[3], condition[4], condition[5], condition[6])'
+                        trigPWQ_toReplace = '_PWQ_CONDITIONS(condition[0], condition[1], condition[2], condition[3], condition[4], condition[5])'
+                        trigPWQ_new = '_PWQ_CONDITIONS(condition[0], condition[1], condition[2], condition[3], condition[4])'
+                        print(line.replace(trigCond_toReplace, trigCond_new).replace(trigPWQ_toReplace, trigPWQ_new).replace(to_replace, driver).replace(to_replace.upper(), driver.upper()), end='')
+            else:
+                with fileinput.FileInput(file, inplace=True, backup='.bak') as file:
+                    for line in file:
+                        trigCond_new = '_TRIGGER_CONDITIONS(condition[0], condition[1], condition[2], condition[3], condition[4], condition[5], condition[6], condition[7])'
+                        trigCond_toReplace = '_TRIGGER_CONDITIONS(condition[0], condition[1], condition[2], condition[3], condition[4], condition[5], condition[6])'
+                        trigPWQ_new = '_PWQ_CONDITIONS(condition[0], condition[1], condition[2], condition[3], condition[4], condition[5])'
+                        trigPWQ_toReplace = '_PWQ_CONDITIONS(condition[0], condition[1], condition[2], condition[3], condition[4])'
+                        print(line.replace(trigCond_toReplace, trigCond_new).replace(trigPWQ_toReplace, trigPWQ_new).replace(to_replace, driver).replace(to_replace.upper(), driver.upper()), end='')
 
     f = open('driver.log', 'w')
     f.write(driver)
