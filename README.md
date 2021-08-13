@@ -2,18 +2,22 @@
 Simple python code that provides an interface (set of macros & GUI [WIP]) for picoscopes to be used for extended data logging beyond the current functionality of proprietary software
 
 ## Pre-requisites:
-In order to effectively use this code, you should install the following python packages through pip:
+In order to effectively use this code (without GUI), you should install the following python packages through pip:
 - numpy
 - picosdk
 
-And, optionally, for the examples in main.py
+And, optionally, for the examples in main_examples.py
 - matplotlib
 
-Users should also make sure that they have the correct drivers and SDK installed for their respective PicoScope.
-These can be found in the official PicoTech website, [*here*](https://www.picotech.com/downloads)
+Users wishing to use the GUI interface should also definitely install,
+- PyQt5
+- matplotlib
+
+Users should also make sure that they have the correct SDK installed for their respective PicoScope.
+This can be found in the official PicoTech website, [*here*](https://www.picotech.com/downloads)
 
 
-**IMPORTANT:** Please make sure that your python architecture and your installed PicoScope driver architecture are the same, if this is not the case then the software will fail to identify any connected units.
+**IMPORTANT:** Please make sure that your python architecture and your installed PicoScope SDK architecture are the same, if this is not the case then the software will fail to identify any connected units.
 
 ## Basics:
 There are 3 available data capture modes,
@@ -64,6 +68,11 @@ Since each of these modes works slightly differently from each other, they requi
 10. Export, Plot, etc.. the data
 11. Close the scope using stop_scope()
 
+## Graphical User Interface
+In order to make use of the GUI variant, users need only to ***run gui_startup.py***, after which point the software will ask you to either specify, select or autodetect the correct drivers for your respective PicoScope \
+Please avoid using this whilst having more than one PicoScopes connected simuiltaneously, as the software will pick one at random to connect to and read the driver version of - *PicoScope selection based on serial number is not available on the GUI as of this time* \
+*__Note__: The GUI variant of this code only supports proper configuration up to 4 channels and does not provide support for pulse width triggering*
+
 ## Apendix:
 Some universal parameters that appear in almost every macro are,
 >***chandle***, c_int16 type variable that acts as a handle for the opened scope. It is aquired from the start_scope() macro\
@@ -71,7 +80,7 @@ Some universal parameters that appear in almost every macro are,
 
 These wil not be referenced again for the sake of simplicity
 
-*NOTE: The following Appendix entries are specified with the ps2000a driver in mind, other driver implementations of thesde methods differ slightly in trig_pwq_config, for further details please see the comments in trig_pwq_macros.py*
+*NOTE: The following Appendix entries are specified with the ps2000a driver in mind, other driver implementations of thesde methods differ slightly in the adc count maximum and the number of elements in a PSX000A_TRIGGER_CONDITIONS structure, for further details please see the associated documentation from the manufacturers website*
 ### Driver Configuration Macros:
 ***
 **driver_replacement**(driver = None)
@@ -260,8 +269,9 @@ These wil not be referenced again for the sake of simplicity
 >***totalSamples***, arbitrary integer representing the toal number of samples to be taken \
 >***segments***, arbitrary integer representing the number of segments that the picoscopes memory will be split into aka the number of waveform captures that can be stored at once before data transfer to a PC is required (one waveform per segment)
 
-**run_to_file**(time_, run, channels_, segments, runIndx, fileName)
+**run_to_file**(time_, timeUnits, run, channels_, segments, runIndx, fileName)
 >***time_***, list of floats that represent the timestamp of each sample taken sequentially. It is returned by *timebase_block_config()* & *timebase_stream_config()* \
+>***timeUnits***, string representing the units of the time axis
 >***run***, list of lists, repsenting a buffer from a *Data Capture Macro* \
 >***channels_***, list of integers from 0 - 3, representing channels A - D, respectively,
 >  - A -> 0
@@ -356,7 +366,7 @@ These wil not be referenced again for the sake of simplicity
 >  - Channel D -> Position 3
 >  - External -> Position 4
 >  - Aux -> Position 5
->  - Digital -> Position 6 \
+>  - Digital -> Position 6 *(ONLY exists in ps2000a)* \
 >-*AKA*-
 >
 >*[channelA; channelB; channelC; channelD; external; aux; pulseWidthQualifier; digital]*
@@ -397,7 +407,7 @@ These wil not be referenced again for the sake of simplicity
 >  - Channel D -> Position 3
 >  - External -> Position 4
 >  - Aux -> Position 5
->  - Digital -> Position 6 \
+>  - Digital -> Position 6 *(ONLY exists in ps2000a)* \
 >-*AKA*-
 >
 >*[channelA; channelB; channelC; channelD; external; aux; pulseWidthQualifier; digital]*
@@ -414,7 +424,7 @@ These wil not be referenced again for the sake of simplicity
 >  - Channel D -> Position 3
 >  - External -> Position 4
 >  - Aux -> Position 5
->  - Digital -> Position 6 \
+>  - Digital -> Position 6 *(ONLY exists in ps2000a)* \
 >-*AKA*-
 >
 >*[channelA; channelB; channelC; channelD; external; aux; pulseWidthQualifier; digital]*
