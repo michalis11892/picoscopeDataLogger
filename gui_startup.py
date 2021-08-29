@@ -1,32 +1,47 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from driver_config_macros import *
 import os
+import sys
+from math import gcd
+
+app_ = QtWidgets.QApplication(sys.argv)
+w, h = app_.primaryScreen().size().width(), app_.primaryScreen().size().height()
+#Screen Ratio Corrections
+gcd_ = gcd(w, h)
+resRatio = w/h
+baseRatio = 16/9
+wR = w/(gcd_*16) #Ratio Correction
+hR = h/(gcd_*9) #Ratio Correction
+widthRatio = 1#w/1920 #Full Width Ratio Correction
+heightRatio = 1#h/1080 #Full Height Ratio Correction
+print(wR, hR)
+app_.exit()
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(250, 90)
-        MainWindow.setMinimumSize(QtCore.QSize(250, 90))
-        MainWindow.setMaximumSize(QtCore.QSize(250, 90))
+        MainWindow.resize(250*widthRatio, 90*heightRatio)
+        MainWindow.setMinimumSize(QtCore.QSize(250*widthRatio, 90*heightRatio))
+        MainWindow.setMaximumSize(QtCore.QSize(250*widthRatio, 90*heightRatio))
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap(".\\icon.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         MainWindow.setWindowIcon(icon)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.driverLabel = QtWidgets.QLabel(self.centralwidget)
-        self.driverLabel.setGeometry(QtCore.QRect(20, 20, 41, 21))
+        self.driverLabel.setGeometry(QtCore.QRect(20*widthRatio, 20*heightRatio, 41*widthRatio, 21*heightRatio))
         self.driverLabel.setObjectName("driverLabel")
         self.driverComboBox = QtWidgets.QComboBox(self.centralwidget)
-        self.driverComboBox.setGeometry(QtCore.QRect(60, 20, 71, 21))
+        self.driverComboBox.setGeometry(QtCore.QRect(60*widthRatio, 20*heightRatio, 71*widthRatio, 21*heightRatio))
         self.driverComboBox.setEditable(True)
         self.driverComboBox.setObjectName("driverComboBox")
         self.driverComboBox.addItem("")
         self.driverComboBox.addItem("")
         self.autoDetectButton = QtWidgets.QPushButton(self.centralwidget)
-        self.autoDetectButton.setGeometry(QtCore.QRect(140, 20, 75, 23))
+        self.autoDetectButton.setGeometry(QtCore.QRect(140*widthRatio, 20*heightRatio, 75*widthRatio, 23*heightRatio))
         self.autoDetectButton.setObjectName("autoDetectButton")
         self.doneButton = QtWidgets.QPushButton(self.centralwidget)
-        self.doneButton.setGeometry(QtCore.QRect(80, 50, 75, 23))
+        self.doneButton.setGeometry(QtCore.QRect(80*widthRatio, 50*heightRatio, 75*widthRatio, 23*heightRatio))
         self.doneButton.setObjectName("doneButton")
         MainWindow.setCentralWidget(self.centralwidget)
 
