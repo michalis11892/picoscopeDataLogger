@@ -1,4 +1,5 @@
 import ctypes
+import copy
 from ctypes import *
 from picosdk.ps2000a import ps2000a as ps
 from picosdk.functions import assert_pico_ok
@@ -32,8 +33,13 @@ def trig_logic_config(chandle, status, trig_conditions, trig_directions, trig_pr
     #Set channel conditions
     cond_list = []
     for condition in trig_conditions:
-        condition = list(map(ctypes.c_int32, condition)) #Convert arguments to ctypes.c_int32
-        cond_list.append(PS2000A_TRIGGER_CONDITIONS(condition[0], condition[1], condition[2], condition[3], condition[4], condition[5], condition[6], condition[7]))
+        condition_ = copy.deepcopy(condition)
+        try:
+            condition = list(map(ctypes.c_int32, condition_)) #Convert arguments to ctypes.c_int32
+            cond_list.append(PS2000A_TRIGGER_CONDITIONS(condition[0], condition[1], condition[2], condition[3], condition[4], condition[5], condition[6], condition[7]))
+        except:
+            condition = list(map(ctypes.c_uint32, condition_)) #Convert arguments to ctypes.c_int32
+            cond_list.append(PS2000A_TRIGGER_CONDITIONS(condition[0], condition[1], condition[2], condition[3], condition[4], condition[5], condition[6], condition[7]))
     cond_list_c = (PS2000A_TRIGGER_CONDITIONS * len(cond_list))(*cond_list)
     status["setTriggerChannelConditions"] = ps.ps2000aSetTriggerChannelConditions(chandle, ctypes.byref(cond_list_c), ctypes.c_int16(len(cond_list)))
     assert_pico_ok(status["setTriggerChannelConditions"])
