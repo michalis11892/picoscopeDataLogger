@@ -1,4 +1,5 @@
 import os
+from os import listdir
 import ctypes
 import numpy as np
 from picosdk.ps2000a import ps2000a as ps
@@ -41,7 +42,7 @@ def run_to_file(time_, timeUnits, run, channels_, segments, runIndx, fileName):
         titleRow += ' '+channels[i]+'(mV)'
     f.write(titleRow+'\n')
     for segment in range(segments):
-        f.write('\n')
+        f.write('\n'+str(segments)+'\n')
         for element in range(len(run[-1][segment])):
             outLine = ''
             for channel in range(len(run)):
@@ -50,5 +51,9 @@ def run_to_file(time_, timeUnits, run, channels_, segments, runIndx, fileName):
     f.close()
 
 def clear_file(fileName):
-    f = open(fileName, 'w')
-    f.close()
+    ls = listdir()
+    for file in ls:
+        if file.split('_') == fileName.split('.')[0] and file.split('.')[1] == filename.split('.')[1]:
+            '''f = open(file, 'w')
+            f.close()'''
+            os.remove(file)
