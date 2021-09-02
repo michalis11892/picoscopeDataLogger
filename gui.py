@@ -1782,17 +1782,17 @@ class Ui_MainWindow(object):
 
         #Data Processing
         for indx in range(len(buff)):
-            runList['runTab'].append(QtWidgets.QWidget())
-            runList['runTab'][-1].setObjectName("run_"+str(indx+1))
-            runList['stackedWidget'].append(QtWidgets.QStackedWidget(runList['runTab'][-1]))
-            runList['stackedWidget'][-1].setGeometry(QtCore.QRect(0*widthRatio, 0*heightRatio, 461*widthRatio, 361*heightRatio))
-            runList['stackedWidget'][-1].setObjectName("stackedWidget_"+str(indx+1))
-            runList['captureTab'].append([])
-            self.tabWidget.addTab(runList['runTab'][-1], "")
-            self.tabWidget.setTabText(self.tabWidget.indexOf(runList['runTab'][-1]), _translate("MainWindow", "Run "+str(indx+1)))
             run = buff[indx]
             run = run_to_mV(chandle, status, run, channels_, cranges_, totalSamples, segments)
             if bool(int(self.graphCheck.checkState())):
+                runList['runTab'].append(QtWidgets.QWidget())
+                runList['runTab'][-1].setObjectName("run_"+str(indx+1))
+                runList['stackedWidget'].append(QtWidgets.QStackedWidget(runList['runTab'][-1]))
+                runList['stackedWidget'][-1].setGeometry(QtCore.QRect(0*widthRatio, 0*heightRatio, 461*widthRatio, 361*heightRatio))
+                runList['stackedWidget'][-1].setObjectName("stackedWidget_"+str(indx+1))
+                runList['captureTab'].append([])
+                self.tabWidget.addTab(runList['runTab'][-1], "")
+                self.tabWidget.setTabText(self.tabWidget.indexOf(runList['runTab'][-1]), _translate("MainWindow", "Run "+str(indx+1)))
                 for i in range(captures):
                     runList['captureTab'][-1].append(Canvas(self, width=4.61*widthRatio, height=3.61*heightRatio, dpi=100))
                     for j in range(len(channels_)):
