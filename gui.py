@@ -560,6 +560,7 @@ class Ui_MainWindow(object):
         self.runsSpinBox = QtWidgets.QSpinBox(self.centralwidget)
         self.runsSpinBox.setGeometry(QtCore.QRect(160*widthRatio, 70*heightRatio, 42*widthRatio, 16*heightRatio))
         self.runsSpinBox.setObjectName("runsSpinBox")
+        self.runsSpinBox.setMaximum(999999999)
         self.tabWidget = QtWidgets.QTabWidget(self.centralwidget)
         self.tabWidget.setGeometry(QtCore.QRect(20*widthRatio, 130*heightRatio, 471*widthRatio, 391*heightRatio))
         self.tabWidget.setObjectName("tabWidget")
@@ -1730,6 +1731,9 @@ class Ui_MainWindow(object):
             trig_logic_config(chandle, status, trigCond_, [self.aDirectionComboBox.currentIndex(), self.bDirectionComboBox.currentIndex(), self.cDirectionComboBox.currentIndex(), self.dDirectionComboBox.currentIndex(), self.extDirectionComboBox.currentIndex(), self.aDirectionComboBox.currentIndex()], trigChannelConf_, int(self.aAutotriggerSpinBox.text()))
 
         #Capture Configuration
+        buffFileName = 'buffer_swap.txt'
+        buff = open(buffFileName, 'w')
+        buff.close()
         if self.modeComboBox.currentText() == 'Block':
             preTriggerSamples = int(self.preTriggerSamplesSpinBox.text())
             postTriggerSamples = int(self.postTriggerSamplesSpinBox.text())
@@ -1739,12 +1743,18 @@ class Ui_MainWindow(object):
             captures = int(self.capturesSpinBox.text())
             time_ = timebase_block_config(chandle, status, timebase, totalSamples) #Setup timebase and time axis
             buffersMax, buffersMin = buffer_block_config(chandle, status, channels_, totalSamples, segments, 0) #Setup buffer and segments
-            buff = []
+            buff = open(buffFileName, 'a')
             if bool(int(self.outFileCheckBox.checkState())):
                 clear_file(self.outFileNameLineEdit.text())
             for i in range(int(self.runsSpinBox.text())):
                 data_block(chandle, status, preTriggerSamples, postTriggerSamples, timebase, 0, 0) #Get data
-                buff.append(copy.deepcopy(buffersMax))
+                for chann in buffersMax:
+                    for segm in chann:
+                        for j in segm:
+                            buff.write(str(j)+',')
+                        buff.write('\n\n')
+                    buff.write('/\n')
+                buff.write('//\n')
         elif self.modeComboBox.currentText() == 'Rapid Block':
             preTriggerSamples = int(self.preTriggerSamplesSpinBox.text())
             postTriggerSamples = int(self.postTriggerSamplesSpinBox.text())
@@ -1755,12 +1765,18 @@ class Ui_MainWindow(object):
             time_ = timebase_block_config(chandle, status, timebase, totalSamples) #Setup timebase and time axis
             segment_capture_config(chandle, status, segments, captures, totalSamples) #Setup memory segmentation & capture configuration
             buffersMax, buffersMin = buffer_block_config(chandle, status, channels_, totalSamples, segments, 0) #Setup buffer and segments
-            buff = []
+            buff = open(buffFileName, 'a')
             if bool(int(self.outFileCheckBox.checkState())):
                 clear_file(self.outFileNameLineEdit.text())
             for i in range(int(self.runsSpinBox.text())):
                 data_rapid_block(chandle, status, preTriggerSamples, postTriggerSamples, timebase, segments, captures, 0, 0) #Get data
-                buff.append(copy.deepcopy(buffersMax))
+                for chann in buffersMax:
+                    for segm in chann:
+                        for j in segm:
+                            buff.write(str(j)+',')
+                        buff.write('\n\n')
+                    buff.write('/\n')
+                buff.write('//\n')
         elif self.modeComboBox.currentText() == 'Streaming':
             preTriggerSamples = int(self.preTriggerSamplesSpinBox.text())
             postTriggerSamples = int(self.postTriggerSamplesSpinBox.text())
@@ -1773,27 +1789,61 @@ class Ui_MainWindow(object):
             captures = int(self.capturesSpinBox.text())
             time_ = timebase_stream_config(totalSamples, sampleInterval, sampleUnits) #Setup timebase and time axis
             buffersComplete, buffersMax, buffersMin = buffer_stream_config(chandle, status, channels_, totalSamples, sizeOfOneBuffer, segments, 0) #Setup buffers
-            buff = []
+            buff = open(buffFileName, 'a')
             if bool(int(self.outFileCheckBox.checkState())):
                 clear_file(self.outFileNameLineEdit.text())
             for i in range(int(self.runsSpinBox.text())):
                 data_streaming(chandle, status, sampleInterval, 0, buffersComplete, buffersMax, sizeOfOneBuffer, sampleUnits, preTriggerSamples, postTriggerSamples, 0, 1) #Get data
-                buff.append(copy.deepcopy(buffersComplete))
+                for chann in buffersMax:
+                    for segm in chann:
+                        for j in segm:
+                            buff.write(str(j)+',')
+                        buff.write('\n\n')
+                    buff.write('/\n')
+                buff.write('//\n')
+        buff.write('F') #EOF character
+        buff.close()
 
         #Data Processing
-        for indx in range(len(buff)):
-            run = buff[indx]
+        tabMax = 7
+        capturesMax = 7
+        indx = 0
+        buff = open(buffFileName, 'r')
+        temp = buff.readline().replace('\n', '')
+        while temp != 'F':
+            indx += 1
+            run = []
+            while temp != '//':
+                chann = []
+                while temp != '/':
+                    segm = []
+                    while temp != '':
+                        data = ''
+                        for char in temp:
+                            if char == ',':
+                                segm.append(int(data))
+                                data = ''
+                            else:
+                                data += char
+                        temp = buff.readline().replace('\n', '')
+                    chann.append(segm)
+                    temp = buff.readline().replace('\n', '')
+                run.append(chann)
+                temp = buff.readline().replace('\n', '')
+            #print(run)
             run = run_to_mV(chandle, status, run, channels_, cranges_, totalSamples, segments)
-            if bool(int(self.graphCheck.checkState())):
+            if bool(int(self.graphCheck.checkState())) and len(runList['runTab']) < tabMax:
                 runList['runTab'].append(QtWidgets.QWidget())
-                runList['runTab'][-1].setObjectName("run_"+str(indx+1))
+                runList['runTab'][-1].setObjectName("run_"+str(indx))
                 runList['stackedWidget'].append(QtWidgets.QStackedWidget(runList['runTab'][-1]))
                 runList['stackedWidget'][-1].setGeometry(QtCore.QRect(0*widthRatio, 0*heightRatio, 461*widthRatio, 361*heightRatio))
-                runList['stackedWidget'][-1].setObjectName("stackedWidget_"+str(indx+1))
+                runList['stackedWidget'][-1].setObjectName("stackedWidget_"+str(indx))
                 runList['captureTab'].append([])
                 self.tabWidget.addTab(runList['runTab'][-1], "")
-                self.tabWidget.setTabText(self.tabWidget.indexOf(runList['runTab'][-1]), _translate("MainWindow", "Run "+str(indx+1)))
+                self.tabWidget.setTabText(self.tabWidget.indexOf(runList['runTab'][-1]), _translate("MainWindow", "Run "+str(indx)))
                 for i in range(captures):
+                    if i >= capturesMax:
+                        break
                     runList['captureTab'][-1].append(Canvas(self, width=4.61*widthRatio, height=3.61*heightRatio, dpi=100))
                     for j in range(len(channels_)):
                         run_channel_capture = run[j][i]
@@ -1805,7 +1855,7 @@ class Ui_MainWindow(object):
                 plt.close('all')
             if bool(int(self.outFileCheckBox.checkState())): #True for file writing
                 run_to_file(time_, self.timeUnitsComboBox.currentText(), run, channels_, segments, indx, self.outFileNameLineEdit.text())
-
+            temp = buff.readline().replace('\n', '')
         stop_scope([chandle, status])
 
 if __name__ == "__main__":
