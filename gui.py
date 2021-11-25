@@ -857,6 +857,7 @@ class Ui_MainWindow(object):
         self.aRangeComboBox.setCurrentIndex(1)
         self.bRangeComboBox.setCurrentIndex(1)
         self.timeUnitsComboBox.setCurrentText('ns')
+        self.aAutotriggerSpinBox.setValue(0)
 
         self.runsSpinBox.setMinimum(1)
         self.timebaseSpinBox.setMinimum(1)

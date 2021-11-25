@@ -35,7 +35,8 @@ def run_to_mV(chandle, status, run, channels_, cranges_, totalSamples, segments)
     return data_mV_segmented
 
 def run_to_file(time_, timeUnits, run, channels_, segments, runIndx, fileName):
-    f = open(fileName.split('.')[0]+'_Run-'+str(runIndx)+'.'+fileName.split('.')[1], 'w')
+    out_folder_name = 'runs_output'
+    f = open(os.path.join(os.getcwd(), out_folder_name, fileName.split('.')[0]+'_Run-'+str(runIndx)+'.'+fileName.split('.')[1], 'w'))
     titleRow = 'Time ('+timeUnits+')'
     for i in channels_:
         #titleRow += ' '+channels[i]+'('+runUnits[i].replace(' ', '')+')'

@@ -16,7 +16,9 @@ v#x                     Mg`                   .Bz!
 !    UB.           !#v                           !
 :     )#x        `V#:                            :
 !      .G8*    `iBk`                             !
-,--------:aEdZd0V---------------------------------'''
+,--------:aEdZd0V---------------------------------
+
+- By Michalis Panayiotou'''
 
 name_art = '''______ _           _____                       ______      _          _
 | ___ (_)         /  ___|                      |  _  \    | |        | |
@@ -42,6 +44,10 @@ class color:
 print('\n'+name_art)
 print(ascii_art)
 print('\n'+color.BOLD+'To select a default setting, simply press '+color.UNDERLINE+'enter'+color.END+color.BOLD+' for convenience'+color.END+'\n')
+out_folder_name = 'runs_output'
+ls = os.listdir(os.getcwd())
+if out_folder_name not in ls:
+    os.mkdir(os.path.join(os.getcwd(), out_folder_name))
 pcmd = input('Terminal '+color.BOLD+'command'+color.END+' for the '+color.GREEN+'python'+color.END+' version to be used (default=python): ').replace(' ', '')
 if pcmd == '':
     pcmd = 'python'

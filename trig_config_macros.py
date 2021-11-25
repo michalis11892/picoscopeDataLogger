@@ -38,7 +38,7 @@ def trig_logic_config(chandle, status, trig_conditions, trig_directions, trig_pr
             condition = list(map(ctypes.c_int32, condition_)) #Convert arguments to ctypes.c_int32
             cond_list.append(PS2000A_TRIGGER_CONDITIONS(condition[0], condition[1], condition[2], condition[3], condition[4], condition[5], condition[6], condition[7]))
         except:
-            condition = list(map(ctypes.c_uint32, condition_)) #Convert arguments to ctypes.c_int32
+            condition = list(map(ctypes.c_uint32, condition_)) #Convert arguments to ctypes.c_uint32
             cond_list.append(PS2000A_TRIGGER_CONDITIONS(condition[0], condition[1], condition[2], condition[3], condition[4], condition[5], condition[6], condition[7]))
     cond_list_c = (PS2000A_TRIGGER_CONDITIONS * len(cond_list))(*cond_list)
     status["setTriggerChannelConditions"] = ps.ps2000aSetTriggerChannelConditions(chandle, ctypes.byref(cond_list_c), ctypes.c_int16(len(cond_list)))
