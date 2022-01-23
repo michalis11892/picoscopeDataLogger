@@ -14,7 +14,7 @@ wR = w/(gcd_*16) #Ratio Correction
 hR = h/(gcd_*9) #Ratio Correction
 widthRatio = 1#w/1920 #Full Width Ratio Correction
 heightRatio = 1#h/1080 #Full Height Ratio Correction
-print(wR, hR)
+#print(wR, hR)
 app_.exit()
 
 class Ui_MainWindow(object):
