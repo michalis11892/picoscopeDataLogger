@@ -1718,18 +1718,35 @@ class Ui_MainWindow(object):
             for i in range(len(conditionList['conditionTab'])):
                 trigCond_.append([conditionList['aStateComboBox'][i].currentIndex(), conditionList['bStateComboBox'][i].currentIndex(), conditionList['cStateComboBox'][i].currentIndex(), conditionList['dStateComboBox'][i].currentIndex(), conditionList['extStateComboBox'][i].currentIndex(), 0, 0, 0])
             trigChannelConf_ = []
+            trigDir = []
             if bool(int(self.aTriggerCheck.checkState())):
                 trigChannelConf_.append([int(self.aUpperThresholdSpinBox.text()), int(self.aUpperHysteresisSpinBox.text()), int(self.aLowerThresholdSpinBox.text()), int(self.aLowerHysteresisSpinBox.text()), 0 ,int(self.aThresholdModeComboBox.currentIndex())])
+                trigDir.append(self.aDirectionComboBox.currentIndex())
+            else:
+                trigDir.append(2) #2 -> None
             if bool(int(self.bTriggerCheck.checkState())):
                 trigChannelConf_.append([int(self.bUpperThresholdSpinBox.text()), int(self.bUpperHysteresisSpinBox.text()), int(self.bLowerThresholdSpinBox.text()), int(self.bLowerHysteresisSpinBox.text()), 1 ,int(self.bThresholdModeComboBox.currentIndex())])
+                trigDir.append(self.bDirectionComboBox.currentIndex())
+            else:
+                trigDir.append(2) #2 -> None
             if bool(int(self.cTriggerCheck.checkState())):
                 trigChannelConf_.append([int(self.cUpperThresholdSpinBox.text()), int(self.cUpperHysteresisSpinBox.text()), int(self.cLowerThresholdSpinBox.text()), int(self.cLowerHysteresisSpinBox.text()), 2 ,int(self.cThresholdModeComboBox.currentIndex())])
+                trigDir.append(self.cDirectionComboBox.currentIndex())
+            else:
+                trigDir.append(2) #2 -> None
             if bool(int(self.dTriggerCheck.checkState())):
                 trigChannelConf_.append([int(self.dUpperThresholdSpinBox.text()), int(self.dUpperHysteresisSpinBox.text()), int(self.dLowerThresholdSpinBox.text()), int(self.dLowerHysteresisSpinBox.text()), 3 ,int(self.dThresholdModeComboBox.currentIndex())])
+                trigDir.append(self.dDirectionComboBox.currentIndex())
+            else:
+                trigDir.append(2) #2 -> None
             if bool(int(self.extTriggerCheck.checkState())):
                 trigChannelConf_.append([int(self.extUpperThresholdSpinBox.text()), int(self.extUpperHysteresisSpinBox.text()), int(self.extLowerThresholdSpinBox.text()), int(self.extLowerHysteresisSpinBox.text()), 4 ,int(self.extThresholdModeComboBox.currentIndex())])
-            print(chandle, status, trigCond_, [self.aDirectionComboBox.currentIndex(), self.bDirectionComboBox.currentIndex(), self.cDirectionComboBox.currentIndex(), self.dDirectionComboBox.currentIndex(), self.extDirectionComboBox.currentIndex(), self.aDirectionComboBox.currentIndex()], trigChannelConf_, int(self.aAutotriggerSpinBox.text()))
-            trig_logic_config(chandle, status, trigCond_, [self.aDirectionComboBox.currentIndex(), self.bDirectionComboBox.currentIndex(), self.cDirectionComboBox.currentIndex(), self.dDirectionComboBox.currentIndex(), self.extDirectionComboBox.currentIndex(), self.aDirectionComboBox.currentIndex()], trigChannelConf_, int(self.aAutotriggerSpinBox.text()))
+                trigDir.append(self.extDirectionComboBox.currentIndex())
+            else:
+                trigDir.append(2) #2 -> None
+            trigDir.append(2) #2 -> None for Aux
+            print(chandle, status, trigCond_, trigDir, trigChannelConf_, int(self.aAutotriggerSpinBox.text()))
+            trig_logic_config(chandle, status, trigCond_, trigDir, trigChannelConf_, int(self.aAutotriggerSpinBox.text()))
 
         #Capture Configuration
         buffFileName = 'buffer_swap.txt'

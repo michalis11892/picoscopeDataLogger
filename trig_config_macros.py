@@ -45,6 +45,7 @@ def trig_logic_config(chandle, status, trig_conditions, trig_directions, trig_pr
     assert_pico_ok(status["setTriggerChannelConditions"])
 
     #Set channel directions
+    #Examples don't have the change of type so try running the code without the below line
     trig_directions =  list(map(ctypes.c_int32, trig_directions)) #Convert arguments to ctypes.c_int32
     status["setTriggerChannelDirections"] = ps.ps2000aSetTriggerChannelDirections(chandle, trig_directions[0], trig_directions[1], trig_directions[2], trig_directions[3], trig_directions[4], trig_directions[5])
     assert_pico_ok(status["setTriggerChannelDirections"])
@@ -52,7 +53,10 @@ def trig_logic_config(chandle, status, trig_conditions, trig_directions, trig_pr
     #Set channel properties
     prop_list = []
     for property in trig_properties:
-        prop_list.append(PS2000A_TRIGGER_CHANNEL_PROPERTIES(ctypes.c_int16(property[0]), ctypes.c_uint16(property[1]), ctypes.c_int16(property[2]), ctypes.c_uint16(property[3]), ctypes.c_int32(property[4]), ctypes.c_int32(property[5])))
+        try:
+            prop_list.append(PS2000A_TRIGGER_CHANNEL_PROPERTIES(ctypes.c_int16(property[0]), ctypes.c_uint16(property[1]), ctypes.c_int16(property[2]), ctypes.c_uint16(property[3]), ctypes.c_int32(property[4]), ctypes.c_int32(property[5])))
+        except:
+            prop_list.append(PS2000A_TRIGGER_CHANNEL_PROPERTIES(ctypes.c_int16(property[0]), ctypes.c_uint16(property[1]), ctypes.c_int16(property[2]), ctypes.c_uint16(property[3]), ctypes.c_uint32(property[4]), ctypes.c_uint32(property[5])))
     prop_list_c = (PS2000A_TRIGGER_CHANNEL_PROPERTIES * len(prop_list))(*prop_list)
     status["setTriggerChannelProperties"] = ps.ps2000aSetTriggerChannelProperties(chandle, ctypes.byref(prop_list_c),  ctypes.c_int16(len(prop_list)), ctypes.c_int16(1), ctypes.c_int32(trig_auto))
     assert_pico_ok(status["setTriggerChannelProperties"])
